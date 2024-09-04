@@ -1,0 +1,16 @@
+[package]
+name = "utils"
+version = "0.1.0"
+
+[dependencies]
+parity-scale-codec = { version = "3.6", default-features = false }
+# codec = { features = ["derive"], workspace = true }
+scale-info = { features = ["derive"], workspace = true }
+serde = { version = "1.0.188", default-features = false }
+sp-core = { workspace = true, default-features = false }
+sp-io = { workspace = true, default-features = false }
+sp-runtime = { workspace = true, features = ["std"] }
+
+## Check if needed afterwards
+# async-trait = "0.1.73"
+# log = { workspace = true }
