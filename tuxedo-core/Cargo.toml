@@ -1,0 +1,63 @@
+[package]
+description = "UTXO framework for Substrate and Polkadot."
+edition = "2021"
+license = "Apache-2.0"
+name = "tuxedo-core"
+repository = "https://github.com/Off-Narrative-Labs/Tuxedo"
+version = "1.0.0-dev"
+
+[dependencies]
+async-trait = { optional = true, workspace = true }
+log = { workspace = true }
+parity-scale-codec = { features = ["derive"], workspace = true }
+parity-util-mem = { optional = true, workspace = true }
+scale-info = { features = ["derive"], workspace = true }
+serde = { features = ["derive"], workspace = true }
+
+# Macros in Tuxedo Core
+# aggregator = { path = "aggregator" }
+derive-no-bound = { path = "no_bound" }
+
+# Substrate
+sp-core = { default-features = false, workspace = true }
+sp-debug-derive = { features = [
+	"force-debug",
+], default-features = false, workspace = true }
+sp-inherents = { default-features = false, workspace = true }
+sp-io = { features = [
+	"with-tracing",
+], default-features = false, workspace = true }
+sp-runtime = { default-features = false, workspace = true }
+sp-std = { default-features = false, workspace = true }
+sp-storage = { default-features = false, workspace = true }
+
+# Genesis Builder dependencies
+sc-chain-spec = { optional = true, workspace = true }
+sc-client-api = { optional = true, workspace = true }
+sc-executor = { optional = true, workspace = true }
+sp-blockchain = { optional = true, workspace = true }
+sp-genesis-builder = { default-features = false, workspace = true }
+
+[dev-dependencies]
+array-bytes = { workspace = true }
+
+[features]
+default = ["std"]
+std = [
+	"async-trait",
+	"sp-debug-derive/std",
+	"parity-scale-codec/std",
+	"sp-core/std",
+	"sp-std/std",
+	"serde/std",
+	"sp-genesis-builder/std",
+	"sp-inherents/std",
+	"sp-io/std",
+	"sp-runtime/std",
+	"parity-util-mem",
+	"sp-storage/std",
+	"sc-client-api",
+	"sc-chain-spec",
+	"sc-executor",
+	"sp-blockchain",
+]
