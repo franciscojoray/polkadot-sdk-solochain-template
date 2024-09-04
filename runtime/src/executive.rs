@@ -1,7 +1,7 @@
 use crate::{
     Block, BlockNumber, Header
     ensure,
-    types::{PallasResult, OutputRef, Transaction, PallasError},
+    utils::{PallasResult, OutputRef, Transaction, PallasError},
     EXTRINSIC_KEY,
     HEADER_KEY,
     HEIGHT_KEY,
@@ -263,7 +263,7 @@ where
 
         Self::validate_tuxedo_transaction(&tx).map_err(|e| {
             TransactionValidityError::Invalid(e.into())
-        });
+        })
     }
 }
 

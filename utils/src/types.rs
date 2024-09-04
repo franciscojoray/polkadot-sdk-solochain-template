@@ -8,6 +8,8 @@ use sp_runtime::{
 };
 use alloc::vec::Vec;
 
+type Coin = u64;
+
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct OutputRef {
     /// A hash of the transaction that created this output

@@ -9,7 +9,7 @@ pub fn get_utxo(output_ref: &OutputRef) -> Option<Output> {
 }
 
 pub fn consume_utxo(output_ref: &OutputRef) -> Option<Output> {
-    let output = Self::peek_utxo(output_ref);
+    let output = get(output_ref);
     storage::clear(&output_ref.encode());
 
     output
