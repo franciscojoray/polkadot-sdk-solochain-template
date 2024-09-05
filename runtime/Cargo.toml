@@ -50,7 +50,7 @@ frame-system-benchmarking = { optional = true, workspace = true }
 pallet-template.workspace = true
 serde = { version = "1.0.209", default-features = false }
 sp-std = { version = "14", default-features = false }
-utils = { path = "../utils" }
+utils = { default-features = false, path = "../utils" }
 
 [build-dependencies]
 substrate-wasm-builder = { optional = true, workspace = true, default-features = true }
