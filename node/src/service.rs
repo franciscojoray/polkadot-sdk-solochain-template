@@ -13,27 +13,27 @@ use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
 pub use sc_executor::NativeElseWasmExecutor;
 
-// Our native executor instance.
-pub struct ExecutorDispatch;
+// // Our native executor instance.
+// pub struct ExecutorDispatch;
 
-impl sc_executor::NativeExecutionDispatch for ExecutorDispatch {
-    type ExtendHostFunctions = ();
+// impl sc_executor::NativeExecutionDispatch for ExecutorDispatch {
+//     type ExtendHostFunctions = ();
 
-    fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-        solochain_template_runtime::api::dispatch(method, data)
-    }
+//     fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
+//         solochain_template_runtime::api::dispatch(method, data)
+//     }
 
-    fn native_version() -> sc_executor::NativeVersion {
-        solochain_template_runtime::native_version()
-    }
-}
+//     fn native_version() -> sc_executor::NativeVersion {
+//         solochain_template_runtime::native_version()
+//     }
+// }
 
-pub(crate) type FullClient = sc_service::TFullClient<Block, RuntimeApi, NativeElseWasmExecutor<ExecutorDispatch>>;
-// pub(crate) type FullClient = sc_service::TFullClient<
-// 	Block,
-// 	RuntimeApi,
-// 	sc_executor::WasmExecutor<sp_io::SubstrateHostFunctions>,
-// >;
+// pub(crate) type FullClient = sc_service::TFullClient<Block, RuntimeApi, NativeElseWasmExecutor<ExecutorDispatch>>;
+pub(crate) type FullClient = sc_service::TFullClient<
+	Block,
+	RuntimeApi,
+	sc_executor::WasmExecutor<sp_io::SubstrateHostFunctions>,
+>;
 type FullBackend = sc_service::TFullBackend<Block>;
 type FullSelectChain = sc_consensus::LongestChain<FullBackend, Block>;
 
