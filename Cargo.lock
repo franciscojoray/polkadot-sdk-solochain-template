@@ -9223,7 +9223,7 @@ dependencies = [
  "sp-timestamp",
  "substrate-build-script-utils",
  "substrate-frame-rpc-system",
- "tuxedo-core",
+ "utils",
 ]
 
 [[package]]

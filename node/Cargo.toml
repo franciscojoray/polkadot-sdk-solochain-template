@@ -80,7 +80,7 @@ frame-benchmarking-cli.workspace = true
 frame-benchmarking-cli.default-features = true
 solochain-template-runtime.workspace = true
 
-tuxedo-core = { path = "../tuxedo-core" }
+utils = { path = "../utils" }
 
 
 [build-dependencies]
