@@ -1,22 +1,30 @@
+extern crate alloc;
+
 use crate::{
-    Block, BlockNumber, Header
-    ensure,
-    utils::{PallasResult, OutputRef, Transaction, PallasError},
-    EXTRINSIC_KEY,
-    HEADER_KEY,
-    HEIGHT_KEY,
+    Block, Header,
 };
-use parity_scale_codec::{Decode, Encode};
+use utils::types::{PallasResult, OutputRef, Transaction, PallasError};
+use codec::{Decode, Encode};
 use sp_runtime::{
     traits::{BlakeTwo256, Block as BlockT, Extrinsic, Hash as HashT, Header as HeaderT},
     transaction_validity::{
-        InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
+        TransactionLongevity, TransactionSource, TransactionValidity,
         TransactionValidityError, ValidTransaction,
     },
     ApplyExtrinsicResult, ExtrinsicInclusionMode, StateVersion,
 };
-use sp_std::{collections::btree_set::BTreeSet};
-use alloc::collections::vec::Vec;
+use alloc::vec::Vec;
+
+/// This key is cleared before the end of the block.
+const HEADER_KEY: &[u8] = b"header";
+
+/// A storage key that will store the block height during and after execution.
+/// This allows the block number to be available in the runtime even during off-chain api calls.
+const HEIGHT_KEY: &[u8] = b"height";
+
+/// A transient storage key that will hold the list of extrinsics that have been applied so far.
+/// This key is cleared before the end of the block.
+const EXTRINSIC_KEY: &[u8] = b"extrinsics";
 
 /// The executive. Each runtime is encouraged to make a type alias called `Executive` that fills
 /// in the proper generic types.
@@ -34,16 +42,6 @@ where
     pub fn validate_tuxedo_transaction(
         transaction: &Transaction,
     ) -> Result<ValidTransaction, PallasError> {
-        // Make sure there are no duplicate inputs
-        // Duplicate peeks are allowed, although they are inefficient and wallets should not create such transactions
-        {
-            let input_set: BTreeSet<_> = transaction.inputs.iter().map(|o| o.encode()).collect();
-            ensure!(
-                input_set.len() == transaction.inputs.len(),
-                PallasError::DuplicateInput
-            );
-        }
-
         let mut missing_inputs = Vec::new();
         for input in transaction.inputs.iter() {
             missing_inputs.push(input.output_ref.clone().encode());
@@ -90,9 +88,6 @@ where
     /// Most of the validation happens in the call to `validate_tuxedo_transaction`.
     /// Once those checks are done we make sure there are no missing inputs and then update storage.
     pub fn apply_tuxedo_transaction(transaction: Transaction) -> PallasResult {
-        // Re-do the pre-checks. These should have been done in the pool, but we can't
-        // guarantee that foreign nodes to these checks faithfully, so we need to check on-chain.
-        let valid_transaction = Self::validate_tuxedo_transaction(&transaction)?;
 
         // At this point, all validation is complete, so we can commit the storage changes.
         Self::update_storage(transaction);
@@ -147,11 +142,6 @@ where
 
         // Now actually apply the extrinsic
         Self::apply_tuxedo_transaction(extrinsic).map_err(|e| {
-            log::warn!(
-                target: LOG_TARGET,
-                "Tuxedo Transaction did not apply successfully: {:?}",
-                e,
-            );
             TransactionValidityError::Invalid(e.into())
         })?;
 
@@ -211,10 +201,7 @@ where
             }
 
             match Self::apply_tuxedo_transaction(extrinsic.clone()) {
-                Ok(()) => debug!(
-                    target: LOG_TARGET,
-                    "Successfully executed extrinsic: {:?}", extrinsic
-                ),
+                Ok(()) => {},
                 Err(e) => panic!("{:?}", e),
             }
         }
@@ -249,17 +236,10 @@ where
     // This one is the pool api. It is used to make preliminary checks in the transaction pool
 
     pub fn validate_transaction(
-        source: TransactionSource,
+        _source: TransactionSource,
         tx: Transaction,
-        block_hash: <Block as BlockT>::Hash,
+        _block_hash: <Block as BlockT>::Hash,
     ) -> TransactionValidity {
-        debug!(
-            target: LOG_TARGET,
-            "Entering validate_transaction. source: {:?}, tx: {:?}, block hash: {:?}",
-            source,
-            tx,
-            block_hash
-        );
 
         Self::validate_tuxedo_transaction(&tx).map_err(|e| {
             TransactionValidityError::Invalid(e.into())

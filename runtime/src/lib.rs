@@ -12,7 +12,7 @@ use sp_api::impl_runtime_apis;
 use sp_inherents::InherentData;
 use sp_runtime::{
     create_runtime_str, impl_opaque_keys,
-    traits::Block as BlockT,
+    traits::{ BlakeTwo256, Block as BlockT, },
     transaction_validity::{TransactionSource, TransactionValidity},
     ApplyExtrinsicResult, BoundToRuntimeAppPublic,
 };
@@ -76,6 +76,9 @@ pub fn native_version() -> NativeVersion {
     }
 }
 
+pub type Hash = BlakeTwo256;
+pub type BlockNumber = u32;
+pub type Header = sp_runtime::generic::Header<BlockNumber, Hash>;
 pub type Block = sp_runtime::generic::Block<Header, Transaction>;
 pub type Output = utils::types::Output;
 
