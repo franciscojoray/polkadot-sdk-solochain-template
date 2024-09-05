@@ -7,15 +7,33 @@ use sc_consensus_grandpa::SharedVoterState;
 use sc_service::{error::Error as ServiceError, Configuration, TaskManager, WarpSyncParams};
 use sc_telemetry::{Telemetry, TelemetryWorker};
 use sc_transaction_pool_api::OffchainTransactionPoolFactory;
-use solochain_template_runtime::{self, opaque::Block, RuntimeApi};
+use solochain_template_runtime::{self, RuntimeApi};
+use tuxedo_core::types::OpaqueBlock as Block;
 use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
+pub use sc_executor::NativeElseWasmExecutor;
 
-pub(crate) type FullClient = sc_service::TFullClient<
-	Block,
-	RuntimeApi,
-	sc_executor::WasmExecutor<sp_io::SubstrateHostFunctions>,
->;
+// Our native executor instance.
+pub struct ExecutorDispatch;
+
+impl sc_executor::NativeExecutionDispatch for ExecutorDispatch {
+    type ExtendHostFunctions = ();
+
+    fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
+        solochain_template_runtime::api::dispatch(method, data)
+    }
+
+    fn native_version() -> sc_executor::NativeVersion {
+        solochain_template_runtime::native_version()
+    }
+}
+
+pub(crate) type FullClient = sc_service::TFullClient<Block, RuntimeApi, NativeElseWasmExecutor<ExecutorDispatch>>;
+// pub(crate) type FullClient = sc_service::TFullClient<
+// 	Block,
+// 	RuntimeApi,
+// 	sc_executor::WasmExecutor<sp_io::SubstrateHostFunctions>,
+// >;
 type FullBackend = sc_service::TFullBackend<Block>;
 type FullSelectChain = sc_consensus::LongestChain<FullBackend, Block>;
 
@@ -180,26 +198,26 @@ pub fn new_full<
 			metrics,
 		})?;
 
-	if config.offchain_worker.enabled {
-		task_manager.spawn_handle().spawn(
-			"offchain-workers-runner",
-			"offchain-worker",
-			sc_offchain::OffchainWorkers::new(sc_offchain::OffchainWorkerOptions {
-				runtime_api_provider: client.clone(),
-				is_validator: config.role.is_authority(),
-				keystore: Some(keystore_container.keystore()),
-				offchain_db: backend.offchain_storage(),
-				transaction_pool: Some(OffchainTransactionPoolFactory::new(
-					transaction_pool.clone(),
-				)),
-				network_provider: Arc::new(network.clone()),
-				enable_http_requests: true,
-				custom_extensions: |_| vec![],
-			})
-			.run(client.clone(), task_manager.spawn_handle())
-			.boxed(),
-		);
-	}
+	// if config.offchain_worker.enabled {
+	// 	task_manager.spawn_handle().spawn(
+	// 		"offchain-workers-runner",
+	// 		"offchain-worker",
+	// 		sc_offchain::OffchainWorkers::new(sc_offchain::OffchainWorkerOptions {
+	// 			runtime_api_provider: client.clone(),
+	// 			is_validator: config.role.is_authority(),
+	// 			keystore: Some(keystore_container.keystore()),
+	// 			offchain_db: backend.offchain_storage(),
+	// 			transaction_pool: Some(OffchainTransactionPoolFactory::new(
+	// 				transaction_pool.clone(),
+	// 			)),
+	// 			network_provider: Arc::new(network.clone()),
+	// 			enable_http_requests: true,
+	// 			custom_extensions: |_| vec![],
+	// 		})
+	// 		.run(client.clone(), task_manager.spawn_handle())
+	// 		.boxed(),
+	// 	);
+	// }
 
 	let role = config.role.clone();
 	let force_authoring = config.force_authoring;
@@ -220,7 +238,7 @@ pub fn new_full<
 	};
 
 	let _rpc_handlers = sc_service::spawn_tasks(sc_service::SpawnTasksParams {
-		network: Arc::new(network.clone()),
+		network: network.clone(),
 		client: client.clone(),
 		keystore: keystore_container.keystore(),
 		task_manager: &mut task_manager,
