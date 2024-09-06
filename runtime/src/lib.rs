@@ -3,6 +3,8 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
+pub mod genesis;
+
 use codec::{Decode, Encode};
 use scale_info::TypeInfo;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -263,8 +265,8 @@ impl_runtime_apis! {
 
     // impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
     //     fn create_default_config() -> Vec<u8> {
-    //         serde_json::to_vec(&genesis::development_genesis_transactions())
-    //             .expect("Development genesis transactions are valid.")
+            // serde_json::to_vec(&genesis::development_genesis_transactions())
+            //     .expect("Development genesis transactions are valid.")
     //     }
 
     //     fn build_config(config: Vec<u8>) -> sp_genesis_builder::Result {
@@ -274,17 +276,21 @@ impl_runtime_apis! {
     //     }
     // }
 
-		// impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
-		// 		fn build_state(config: Vec<u8>) -> sp_genesis_builder::Result {
-		// 			build_state::<RuntimeGenesisConfig>(config)
-		// 		}
+    impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
+        fn build_state(_config: Vec<u8>) -> sp_genesis_builder::Result {
+            // build_state::<RuntimeGenesisConfig>(config)
+            Ok(())
+        }
 
-		// 		fn get_preset(id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
-		// 			get_preset::<RuntimeGenesisConfig>(id, |_| None)
-		// 		}
+        fn get_preset(_id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
+            // get_preset::<RuntimeGenesisConfig>(id, |_| None)
+            let txs : &Vec<Transaction> = &Vec::new();
+            Some(serde_json::to_vec(txs)
+                .expect("Development genesis transactions are valid."))
+        }
 
-		// 		fn preset_names() -> Vec<sp_genesis_builder::PresetId> {
-		// 			vec![]
-		// 		}
-		// }
+        fn preset_names() -> Vec<sp_genesis_builder::PresetId> {
+            vec![]
+        }
+    }
 }

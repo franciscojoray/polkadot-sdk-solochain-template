@@ -84,3 +84,5 @@ array-bytes = "6.0.0"
 proc-macro2 = "1.0.67"
 quote = "1.0.23"
 syn = "2.0.15"
+# sp-application-crypto = { branch = "release-polkadot-v1.10.1", default-features = false, git = "https://github.com/paritytech/polkadot-sdk" }
+hex-literal = "0.4.1"

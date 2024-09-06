@@ -4,6 +4,7 @@ use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_consensus_grandpa::AuthorityId as GrandpaId;
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
+use solochain_template_runtime::genesis::development_genesis_config;
 
 // The URL for the telemetry server.
 // const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
@@ -41,6 +42,7 @@ pub fn development_config() -> Result<ChainSpec, String> {
 	.with_name("Development")
 	.with_id("dev")
 	.with_chain_type(ChainType::Development)
+	// .with_genesis_config_patch(development_genesis_config())
 	// .with_genesis_config_patch(testnet_genesis(
 	// 	// Initial PoA authorities
 	// 	vec![authority_keys_from_seed("Alice")],
@@ -66,6 +68,7 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 	.with_name("Local Testnet")
 	.with_id("local_testnet")
 	.with_chain_type(ChainType::Local)
+	// .with_genesis_config_patch(development_genesis_config())
 	// .with_genesis_config_patch(testnet_genesis(
 	// 	// Initial PoA authorities
 	// 	vec![authority_keys_from_seed("Alice"), authority_keys_from_seed("Bob")],

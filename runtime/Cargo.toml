@@ -45,8 +45,13 @@ frame-system-benchmarking = { optional = true, workspace = true }
 pallet-template.workspace = true
 
 serde = { version = "1.0.209", default-features = false }
+serde_json = { features = [
+	"alloc",
+], default-features = false, workspace = true }
 sp-std = { version = "14", default-features = false }
 tuxedo-core = { default-features = false, path = "../tuxedo-core" }
+# sp-application-crypto = { default-features = false, workspace = true }
+hex-literal = { workspace = true }
 
 
 [build-dependencies]
@@ -82,6 +87,7 @@ std = [
 	"sp-consensus-grandpa/std",
 	"sp-core/std",
 	"sp-genesis-builder/std",
+	# "sp-application-crypto/std",
 	"sp-inherents/std",
 	"sp-offchain/std",
 	"sp-runtime/std",
