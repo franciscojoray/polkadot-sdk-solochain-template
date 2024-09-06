@@ -7,6 +7,7 @@ use codec::{Decode, Encode};
 use scale_info::TypeInfo;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_api::impl_runtime_apis;
+use sp_core::OpaqueMetadata;
 use sp_inherents::InherentData;
 use sp_runtime::{
     create_runtime_str, impl_opaque_keys,
@@ -197,20 +198,19 @@ impl_runtime_apis! {
         }
     }
 
-    // // Tuxedo metadata is pretty trivial atm
-    // impl sp_api::Metadata<Block> for Runtime {
-    //     fn metadata() -> OpaqueMetadata {
-    //         OpaqueMetadata::new(TuxedoMetadata::default().encode())
-    //     }
+    impl sp_api::Metadata<Block> for Runtime {
+        fn metadata() -> OpaqueMetadata {
+            OpaqueMetadata::new(Vec::new())
+        }
 
-    //     fn metadata_at_version(_version: u32) -> Option<OpaqueMetadata> {
-    //         None
-    //     }
+        fn metadata_at_version(_version: u32) -> Option<OpaqueMetadata> {
+            None
+        }
 
-    //     fn metadata_versions() -> sp_std::vec::Vec<u32> {
-    //         Default::default()
-    //     }
-    // }
+        fn metadata_versions() -> sp_std::vec::Vec<u32> {
+            Default::default()
+        }
+    }
 
     impl sp_session::SessionKeys<Block> for Runtime {
         fn generate_session_keys(seed: Option<Vec<u8>>) -> Vec<u8> {
