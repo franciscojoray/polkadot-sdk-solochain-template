@@ -42,7 +42,7 @@ pub fn development_config() -> Result<ChainSpec, String> {
 	.with_name("Development")
 	.with_id("dev")
 	.with_chain_type(ChainType::Development)
-	// .with_genesis_config_patch(development_genesis_config())
+	.with_genesis_config_patch(development_genesis_config())
 	// .with_genesis_config_patch(testnet_genesis(
 	// 	// Initial PoA authorities
 	// 	vec![authority_keys_from_seed("Alice")],
@@ -68,7 +68,7 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 	.with_name("Local Testnet")
 	.with_id("local_testnet")
 	.with_chain_type(ChainType::Local)
-	// .with_genesis_config_patch(development_genesis_config())
+	.with_genesis_config_patch(development_genesis_config())
 	// .with_genesis_config_patch(testnet_genesis(
 	// 	// Initial PoA authorities
 	// 	vec![authority_keys_from_seed("Alice"), authority_keys_from_seed("Bob")],

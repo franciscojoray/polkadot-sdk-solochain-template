@@ -8,6 +8,7 @@ pub mod genesis;
 use codec::{Decode, Encode};
 use scale_info::TypeInfo;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
+use sp_consensus_grandpa::AuthorityId as GrandpaId;
 use sp_api::impl_runtime_apis;
 use sp_core::OpaqueMetadata;
 use sp_inherents::InherentData;
@@ -97,58 +98,56 @@ pub struct Runtime;
 impl Runtime {
     /// Aura authority IDs
     fn aura_authorities() -> Vec<AuraId> {
-        // use hex_literal::hex;
-        // use sp_application_crypto::ByteArray;
+        use hex_literal::hex;
+        use sp_application_crypto::ByteArray;
 
-        // [
-        //     // Alice
-        //     hex!("d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"),
-        //     // Bob
-        //     // hex!("8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48"),
-        //     // Charlie
-        //     // hex!("90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22"),
-        //     // Dave
-        //     // hex!("306721211d5404bd9da88e0204360a1a9ab8b87c66c1bc2fcdd37f3c2222cc20"),
-        //     // Eve
-        //     // hex!("e659a7a1628cdd93febc04a4e0646ea20e9f5f0ce097d9a05290d4a9e054df4e"),
-        //     // Ferdie
-        //     // hex!("1cbd2d43530a44705ad088af313e18f80b53ef16b36177cd4b77b846f2a5f07c"),
-        // ]
-        // .iter()
-        // .map(|hex| AuraId::from_slice(hex.as_ref()).expect("Valid Aura authority hex was provided"))
-        // .collect()
-				[].to_vec()
+        [
+            // Alice
+            hex!("d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"),
+            // Bob
+            // hex!("8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48"),
+            // Charlie
+            // hex!("90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22"),
+            // Dave
+            // hex!("306721211d5404bd9da88e0204360a1a9ab8b87c66c1bc2fcdd37f3c2222cc20"),
+            // Eve
+            // hex!("e659a7a1628cdd93febc04a4e0646ea20e9f5f0ce097d9a05290d4a9e054df4e"),
+            // Ferdie
+            // hex!("1cbd2d43530a44705ad088af313e18f80b53ef16b36177cd4b77b846f2a5f07c"),
+        ]
+        .iter()
+        .map(|hex| AuraId::from_slice(hex.as_ref()).expect("Valid Aura authority hex was provided"))
+        .collect()
     }
 
     ///Grandpa Authority IDs - All equally weighted
     fn grandpa_authorities() -> sp_consensus_grandpa::AuthorityList {
-        // use hex_literal::hex;
-        // use sp_application_crypto::ByteArray;
+        use hex_literal::hex;
+        use sp_application_crypto::ByteArray;
 
-        // [
-        //     // Alice
-        //     hex!("88dc3417d5058ec4b4503e0c12ea1a0a89be200fe98922423d4334014fa6b0ee"),
-        //     // Bob
-        //     // hex!("d17c2d7823ebf260fd138f2d7e27d114c0145d968b5ff5006125f2414fadae69"),
-        //     // Charlie
-        //     // hex!("439660b36c6c03afafca027b910b4fecf99801834c62a5e6006f27d978de234f"),
-        //     // Dave
-        //     // hex!("5e639b43e0052c47447dac87d6fd2b6ec50bdd4d0f614e4299c665249bbd09d9"),
-        //     // Eve
-        //     // hex!("1dfe3e22cc0d45c70779c1095f7489a8ef3cf52d62fbd8c2fa38c9f1723502b5"),
-        //     // Ferdie
-        //     // hex!("568cb4a574c6d178feb39c27dfc8b3f789e5f5423e19c71633c748b9acf086b5"),
-        // ]
-        // .iter()
-        // .map(|hex| {
-        //     (
-        //         GrandpaId::from_slice(hex.as_ref())
-        //             .expect("Valid Grandpa authority hex was provided"),
-        //         1,
-        //     )
-        // })
-        // .collect()
-				[].to_vec()
+        [
+            // Alice
+            hex!("88dc3417d5058ec4b4503e0c12ea1a0a89be200fe98922423d4334014fa6b0ee"),
+            // Bob
+            // hex!("d17c2d7823ebf260fd138f2d7e27d114c0145d968b5ff5006125f2414fadae69"),
+            // Charlie
+            // hex!("439660b36c6c03afafca027b910b4fecf99801834c62a5e6006f27d978de234f"),
+            // Dave
+            // hex!("5e639b43e0052c47447dac87d6fd2b6ec50bdd4d0f614e4299c665249bbd09d9"),
+            // Eve
+            // hex!("1dfe3e22cc0d45c70779c1095f7489a8ef3cf52d62fbd8c2fa38c9f1723502b5"),
+            // Ferdie
+            // hex!("568cb4a574c6d178feb39c27dfc8b3f789e5f5423e19c71633c748b9acf086b5"),
+        ]
+        .iter()
+        .map(|hex| {
+            (
+                GrandpaId::from_slice(hex.as_ref())
+                    .expect("Valid Grandpa authority hex was provided"),
+                1,
+            )
+        })
+        .collect()
     }
 }
 
@@ -284,7 +283,7 @@ impl_runtime_apis! {
 
         fn get_preset(_id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
             // get_preset::<RuntimeGenesisConfig>(id, |_| None)
-            let txs : &Vec<Transaction> = &Vec::new();
+            let txs : &Vec<Transaction> = &genesis::development_genesis_transactions();
             Some(serde_json::to_vec(txs)
                 .expect("Development genesis transactions are valid."))
         }

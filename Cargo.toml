@@ -27,7 +27,7 @@ sc-consensus-aura = { version = "0.44.0", default-features = false }
 sc-consensus-grandpa = { version = "0.29.0", default-features = false }
 sc-executor = { version = "0.40.0", default-features = false }
 sc-network = { version = "0.44.0", default-features = false }
-sc-offchain = { version = "39.0.0", default-features = false }
+# sc-offchain = { version = "39.0.0", default-features = false }
 sc-rpc-api = { version = "0.43.0", default-features = false }
 sc-service = { version = "0.45.0", default-features = false }
 sc-telemetry = { version = "24.0.0", default-features = false }
@@ -62,7 +62,7 @@ pallet-timestamp = { version = "36.0.0", default-features = false }
 pallet-transaction-payment-rpc-runtime-api = { version = "37.0.0", default-features = false }
 scale-info = { version = "2.11.1", default-features = false }
 sp-genesis-builder = { version = "0.15.0", default-features = false }
-sp-offchain = { version = "34.0.0", default-features = false }
+# sp-offchain = { version = "34.0.0", default-features = false }
 sp-session = { version = "35.0.0", default-features = false }
 sp-storage = { version = "21.0.0", default-features = false }
 sp-transaction-pool = { version = "34.0.0", default-features = false }
@@ -84,5 +84,5 @@ array-bytes = "6.0.0"
 proc-macro2 = "1.0.67"
 quote = "1.0.23"
 syn = "2.0.15"
-# sp-application-crypto = { branch = "release-polkadot-v1.10.1", default-features = false, git = "https://github.com/paritytech/polkadot-sdk" }
+sp-application-crypto = { version = "38", default-features = false }
 hex-literal = "0.4.1"
