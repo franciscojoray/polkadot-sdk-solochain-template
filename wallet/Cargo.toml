@@ -1,0 +1,31 @@
+[package]
+description = "Test wallet"
+edition = "2021"
+license = "Apache-2.0"
+name = "utxo-wallet"
+version = "0.1.0"
+
+[dependencies]
+runtime = { package = "solochain-template-runtime", path = "../runtime" }
+tuxedo-core = { path = "../tuxedo-core" }
+
+clap = { features = [ "derive" ], workspace = true }
+hex-literal = { workspace = true }
+jsonrpsee = { features = [ "http-client" ], workspace = true }
+log = { workspace = true }
+parity-scale-codec = { workspace = true }
+serde_json = { workspace = true }
+
+sp-core = { workspace = true }
+sp-runtime = { workspace = true }
+
+anyhow = "1.0.69"
+directories = "5.0.0"
+env_logger = "0.11.0"
+futures = "0.3"
+hex = "0.4.3"
+sled = "0.34.7"
+tokio = "1.25.0"
+sc-keystore = { branch = "release-polkadot-v1.10.1", git = "https://github.com/paritytech/polkadot-sdk" }
+sp-keystore = { branch = "release-polkadot-v1.10.1", default-features = false, git = "https://github.com/paritytech/polkadot-sdk" }
+
