@@ -136,11 +136,11 @@ pub type DispatchResult = Result<(), UtxoError>;
 /// the contained data is generic.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Output {
-    pub payload: u32,
+    pub payload: u64,
 }
 
-impl From<u32> for Output {
-    fn from(payload: u32) -> Self {
+impl From<u64> for Output {
+    fn from(payload: u64) -> Self {
         Self { payload }
     }
 }
