@@ -8,6 +8,8 @@ use sp_runtime::{
 };
 use sp_std::vec::Vec;
 
+pub type Coin = u64;
+
 // All Tuxedo chains use the same BlakeTwo256 hash.
 pub type Hash = BlakeTwo256;
 /// Opaque block hash type.
@@ -136,11 +138,11 @@ pub type DispatchResult = Result<(), UtxoError>;
 /// the contained data is generic.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Output {
-    pub payload: u64,
+    pub payload: Coin,
 }
 
-impl From<u64> for Output {
-    fn from(payload: u64) -> Self {
+impl From<Coin> for Output {
+    fn from(payload: Coin) -> Self {
         Self { payload }
     }
 }
