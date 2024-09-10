@@ -1,5 +1,4 @@
-//! Strongly typed helper functions for communicating with the Node's
-//! RPC endpoint.
+//! Helper functions for communicating with the Node's RPC endpoint.
 
 use crate::strip_0x_prefix;
 use anyhow::anyhow;
@@ -11,7 +10,7 @@ use tuxedo_core::{
 
 };
 
-/// Typed helper to get the Node's block hash at a particular height
+/// Get the Node's block hash at a particular height
 pub async fn node_get_block_hash(height: u32, client: &HttpClient) -> anyhow::Result<Option<H256>> {
     let params = rpc_params![Some(height)];
     let rpc_response: Option<String> = client.request("chain_getBlockHash", params).await?;

@@ -26,9 +26,7 @@ use tuxedo_core::{
     types::Transaction,
     types::{Coin, Input, OpaqueBlock, OutputRef},
 };
-
 use jsonrpsee::http_client::HttpClient;
-use runtime::Block;
 
 /// The identifier for the blocks tree in the db.
 const BLOCKS: &str = "blocks";
@@ -213,20 +211,6 @@ pub(crate) fn get_block_hash(db: &Db, height: u32) -> anyhow::Result<Option<H256
     let hash = H256::decode(&mut &ivec[..])?;
 
     Ok(Some(hash))
-}
-
-// This is part of what I expect to be a useful public interface. For now it is not used.
-#[allow(dead_code)]
-/// Gets the block from the local database given a block hash. Similar to the Node's RPC.
-pub(crate) fn get_block(db: &Db, hash: H256) -> anyhow::Result<Option<Block>> {
-    let wallet_blocks_tree = db.open_tree(BLOCKS)?;
-    let Some(ivec) = wallet_blocks_tree.get(hash.encode())? else {
-        return Ok(None);
-    };
-
-    let block = Block::decode(&mut &ivec[..])?;
-
-    Ok(Some(block))
 }
 
 /// Apply a block to the local database

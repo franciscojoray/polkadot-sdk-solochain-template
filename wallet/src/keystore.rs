@@ -1,6 +1,4 @@
 //! Wallet's local keystore.
-//!
-//! This is a thin wrapper around sc-cli for use in tuxedo wallets
 
 use anyhow::anyhow;
 use sc_keystore::LocalKeystore;
@@ -14,7 +12,7 @@ use std::path::Path;
 
 /// A KeyTypeId to use in the keystore for Tuxedo transactions. We'll use this everywhere
 /// until it becomes clear that there is a reason to use multiple of them
-const KEY_TYPE: KeyTypeId = KeyTypeId(*b"_tux");
+const KEY_TYPE: KeyTypeId = KeyTypeId(*b"_gri");
 
 /// A default seed phrase for signing inputs when none is provided
 /// Corresponds to the default pubkey.
@@ -30,19 +28,6 @@ pub fn insert_development_key_for_this_session(keystore: &LocalKeystore) -> anyh
     Ok(())
 }
 
-/// Sign a given message with the private key that corresponds to the given public key.
-///
-/// Returns an error if the keystore itself errors, or does not contain the requested key.
-// pub fn sign_with(
-//     keystore: &LocalKeystore,
-//     public: &Public,
-//     message: &[u8],
-// ) -> anyhow::Result<Signature> {
-//     keystore
-//         .sr25519_sign(KEY_TYPE, public, message)?
-//         .ok_or(anyhow!("Key doesn't exist in keystore"))
-// }
-
 /// Insert the private key associated with the given seed into the keystore for later use.
 pub fn insert_key(keystore: &LocalKeystore, seed: &str) -> anyhow::Result<()> {
     // We need to provide a public key to the keystore manually, so let's calculate it.
@@ -56,8 +41,6 @@ pub fn insert_key(keystore: &LocalKeystore, seed: &str) -> anyhow::Result<()> {
 
 /// Generate a new key from system entropy and insert it into the keystore, optionally
 /// protected by a password.
-///
-/// TODO there is no password support when using keys later when signing.
 pub fn generate_key(keystore: &LocalKeystore, password: Option<String>) -> anyhow::Result<()> {
     let (pair, phrase, _) = Pair::generate_with_phrase(password.as_deref());
     println!("Generated public key is {:?}", pair.public());
@@ -68,16 +51,11 @@ pub fn generate_key(keystore: &LocalKeystore, password: Option<String>) -> anyho
     Ok(())
 }
 
-/// Check whether a specific key is in the keystore
-// pub fn has_key(keystore: &LocalKeystore, pubkey: &H256) -> bool {
-//     keystore.has_keys(&[(pubkey.encode(), KEY_TYPE)])
-// }
-
 pub fn get_keys(keystore: &LocalKeystore) -> anyhow::Result<impl Iterator<Item = Vec<u8>>> {
     Ok(keystore.keys(KEY_TYPE)?.into_iter())
 }
 
-/// Caution. Removes key from keystore. Call with care.
+/// Removes key from keystore. Call with care.
 pub fn remove_key(keystore_path: &Path, pub_key: &H256) -> anyhow::Result<()> {
     // The keystore doesn't provide an API for removing keys, so we
     // remove them from the filesystem directly

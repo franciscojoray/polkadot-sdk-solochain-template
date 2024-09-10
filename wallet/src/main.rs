@@ -105,7 +105,7 @@ async fn main() -> anyhow::Result<()> {
             Ok(())
         }
         Some(Command::SpendCoins(args)) => {
-            money::spend_coins(false, &db, &client, &keystore, args).await
+            money::spend_coins(&db, &client, &keystore, args).await
         }
         Some(Command::InsertKey { seed }) => crate::keystore::insert_key(&keystore, &seed),
         Some(Command::GenerateKey { password }) => {

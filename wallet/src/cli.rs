@@ -1,14 +1,16 @@
-//! Tuxedo Template Wallet's Command Line Interface.
-//!
-//! Built with clap's derive macros.
+//! Test Wallet's Command Line Interface.
 
 use std::path::PathBuf;
 
 use clap::{ArgAction::Append, Args, Parser, Subcommand};
 use sp_core::H256;
 use tuxedo_core::types::{Coin, OutputRef};
-
-use crate::{h256_from_string, keystore::SHAWN_PUB_KEY, output_ref_from_string, DEFAULT_ENDPOINT};
+use crate::{
+    h256_from_string,
+    keystore::SHAWN_PUB_KEY,
+    output_ref_from_string,
+    DEFAULT_ENDPOINT
+};
 
 /// The default number of coins to be minted.
 pub const DEFAULT_MINT_VALUE: &str = "100";
@@ -63,8 +65,6 @@ pub enum Command {
     },
 
     /// Spend some coins.
-    /// For now, all outputs in a single transaction go to the same recipient.
-    // FixMe: #62
     #[command(verbatim_doc_comment)]
     SpendCoins(SpendArgs),
 
@@ -72,10 +72,6 @@ pub enum Command {
     InsertKey {
         /// Seed phrase of the key to insert.
         seed: String,
-        // /// Height from which the blockchain should be scanned to sync outputs
-        // /// belonging to this address. If non is provided, no re-syncing will
-        // /// happen and this key will be treated like a new key.
-        // sync_height: Option<u32>,
     },
 
     /// Generate a private key using either some or no password and insert into the keystore.
@@ -112,8 +108,6 @@ pub struct MintCoinArgs {
     #[arg(long, short, verbatim_doc_comment, action = Append,default_value = DEFAULT_MINT_VALUE)]
     pub amount: Coin,
 
-    // https://docs.rs/clap/latest/clap/_derive/_cookbook/typed_derive/index.html
-    // shows how to specify a custom parsing function
     /// Hex encoded address (sr25519 pubkey) of the owner.
     #[arg(long, short, verbatim_doc_comment, value_parser = h256_from_string, default_value = SHAWN_PUB_KEY)]
     pub owner: H256,
@@ -126,13 +120,10 @@ pub struct SpendArgs {
     #[arg(long, short, verbatim_doc_comment, value_parser = output_ref_from_string)]
     pub input: Vec<OutputRef>,
 
-    // https://docs.rs/clap/latest/clap/_derive/_cookbook/typed_derive/index.html
-    // shows how to specify a custom parsing function
     /// Hex encoded address (sr25519 pubkey) of the recipient.
     #[arg(long, short, verbatim_doc_comment, value_parser = h256_from_string, default_value = SHAWN_PUB_KEY)]
     pub recipient: H256,
 
-    // The `action = Append` allows us to accept the same value multiple times.
     /// An output amount. For the transaction to be valid, the outputs must add up to less than the sum of the inputs.
     /// The wallet will not enforce this and will gladly send an invalid which will then be rejected by the node.
     #[arg(long, short, verbatim_doc_comment, action = Append)]

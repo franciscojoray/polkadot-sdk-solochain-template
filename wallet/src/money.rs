@@ -33,11 +33,11 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
 
     let encoded_tx = hex::encode(transaction.encode());
     let params = rpc_params![encoded_tx];
-    let _spawn_response: Result<String, _> = client.request("author_submitExtrinsic", params).await;
+    let spawn_response: Result<String, _> = client.request("author_submitExtrinsic", params).await;
 
     log::info!(
         "Node's response to mint-coin transaction: {:?}",
-        _spawn_response
+        spawn_response
     );
 
     let minted_coin_ref = OutputRef {
@@ -56,19 +56,12 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
 
 /// Create and send a transaction that spends coins on the network
 pub async fn spend_coins(
-    parachain: bool,
     db: &Db,
     client: &HttpClient,
     keystore: &LocalKeystore,
     args: SpendArgs,
 ) -> anyhow::Result<()> {
-    // Depending how the parachain and metadata support shapes up, it may make sense to have a
-    // macro that writes all of these helpers and ifs.
-    if parachain {
-        spend_coins_helper(db, client, keystore, args).await
-    } else {
-        spend_coins_helper(db, client, keystore, args).await
-    }
+    spend_coins_helper(db, client, keystore, args).await
 }
 
 pub async fn spend_coins_helper(
