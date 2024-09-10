@@ -89,9 +89,8 @@ pub(crate) fn open_db(
 pub(crate) async fn synchronize(
     db: &Db,
     client: &HttpClient,
-    filter: &bool,
 ) -> anyhow::Result<()> {
-    synchronize_helper(db, client, filter).await
+    synchronize_helper(db, client).await
 }
 
 /// Synchronize the local database to the database of the running node.
@@ -100,7 +99,6 @@ pub(crate) async fn synchronize(
 pub(crate) async fn synchronize_helper(
     db: &Db,
     client: &HttpClient,
-    filter: &bool,
 ) -> anyhow::Result<()> {
     log::debug!("Synchronizing wallet with node.");
 
@@ -144,7 +142,7 @@ pub(crate) async fn synchronize_helper(
             .expect("Node should be able to return a block whose hash it already returned");
 
         // Apply the new block
-        apply_block(db, block, hash, filter).await?;
+        apply_block(db, block, hash).await?;
 
         height += 1;
 
@@ -218,7 +216,6 @@ pub(crate) async fn apply_block(
     db: &Db,
     b: OpaqueBlock,
     block_hash: H256,
-    filter: &bool,
 ) -> anyhow::Result<()> {
     log::debug!("Applying Block {:?}, Block_Hash {:?}", b, block_hash);
     // Write the hash to the block_hashes table
@@ -231,7 +228,7 @@ pub(crate) async fn apply_block(
 
     // Iterate through each transaction
     for tx in b.extrinsics {
-        apply_transaction(db, tx, filter).await?;
+        apply_transaction(db, tx).await?;
     }
 
     Ok(())
@@ -242,7 +239,6 @@ pub(crate) async fn apply_block(
 async fn apply_transaction(
     db: &Db,
     opaque_tx: OpaqueExtrinsic,
-    filter: &bool,
 ) -> anyhow::Result<()> {
     let encoded_extrinsic = opaque_tx.encode();
     let tx_hash = BlakeTwo256::hash_of(&encoded_extrinsic);
@@ -253,9 +249,7 @@ async fn apply_transaction(
 
     // Insert all new outputs
     for (index, output) in tx.outputs.iter().enumerate() {
-        if *filter {
-            crate::money::apply_transaction(db, tx_hash, index as u32, output)?;
-        }
+        crate::money::apply_transaction(db, tx_hash, index as u32, output)?;
     }
 
     log::debug!("about to spend all inputs");
