@@ -14,10 +14,6 @@ parity-util-mem = { optional = true, workspace = true }
 scale-info = { features = ["derive"], workspace = true }
 serde = { features = ["derive"], workspace = true }
 
-# Macros in Tuxedo Core
-# aggregator = { path = "aggregator" }
-derive-no-bound = { path = "no_bound" }
-
 # Substrate
 sp-core = { default-features = false, workspace = true }
 sp-debug-derive = { features = [
