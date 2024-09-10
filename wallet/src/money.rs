@@ -7,7 +7,7 @@ use jsonrpsee::{core::client::ClientT, http_client::HttpClient, rpc_params};
 use parity_scale_codec::Encode;
 use sc_keystore::LocalKeystore;
 use sled::Db;
-use sp_core::H256; // {sr25519::Public, H256};
+use sp_core::H256;
 use sp_runtime::traits::{BlakeTwo256, Hash};
 use tuxedo_core::{
     types::{Coin, Input, Output, OutputRef, Transaction},
@@ -15,15 +15,10 @@ use tuxedo_core::{
 
 /// Create and send a transaction that mints the coins on the network
 pub async fn mint_coins(
-    parachain: bool,
     client: &HttpClient,
     args: MintCoinArgs,
 ) -> anyhow::Result<()> {
-    if parachain {
-        mint_coins_helper(client, args).await
-    } else {
-        mint_coins_helper(client, args).await
-    }
+    mint_coins_helper(client, args).await
 }
 
 pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyhow::Result<()> {
@@ -55,7 +50,6 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
         "Minted {:?} worth {amount}. ",
         hex::encode(minted_coin_ref.encode())
     );
-    // crate::pretty_print_verifier(&output.verifier);
 
     Ok(())
 }
@@ -88,9 +82,7 @@ pub async fn spend_coins_helper(
     // Construct a template Transaction to push coins into later
     let mut transaction: Transaction = Transaction {
         inputs: Vec::new(),
-        // peeks: Vec::new(),
         outputs: Vec::new(),
-        // checker: OuterConstraintChecker::Money(MoneyConstraintChecker::Spend).into(),
     };
 
     // Construct each output and then push to the transactions
@@ -98,9 +90,6 @@ pub async fn spend_coins_helper(
     for amount in &args.output_amount {
         let output = Output {
             payload: *amount,
-            // verifier: OuterVerifier::Sr25519Signature(Sr25519Signature {
-            // owner_pubkey: args.recipient,
-            // }),
         };
         total_output_amount += *amount;
         transaction.outputs.push(output);
@@ -116,7 +105,6 @@ pub async fn spend_coins_helper(
         ))?;
         total_input_amount += amount;
     }
-    //TODO filtering on a specific sender
 
     // If the supplied inputs are not valuable enough to cover the output amount
     // we select the rest arbitrarily from the local db. (In many cases, this will be all the inputs.)
@@ -137,36 +125,8 @@ pub async fn spend_coins_helper(
         get_coin_from_storage(output_ref, client).await?;
         transaction.inputs.push(Input {
             output_ref: output_ref.clone(),
-            // redeemer: Default::default(), // We will sign the total transaction so this should be empty
         });
     }
-
-    // Keep a copy of the stripped encoded transaction for signing purposes
-    // let stripped_encoded_transaction = transaction.clone().encode();
-
-    // Iterate back through the inputs, signing, and putting the signatures in place.
-    // for input in &mut transaction.inputs {
-    // Fetch the output from storage
-    // let utxo = fetch_storage(&input.output_ref, client).await?;
-
-    // // Construct the proof that it can be consumed
-    // let redeemer = match utxo.verifier {
-    //     OuterVerifier::Sr25519Signature(Sr25519Signature { owner_pubkey }) => {
-    //         let public = Public::from_h256(owner_pubkey);
-    //         let signature =
-    //             crate::keystore::sign_with(keystore, &public, &stripped_encoded_transaction)?;
-    //         OuterVerifierRedeemer::Sr25519Signature(signature)
-    //     }
-    //     OuterVerifier::UpForGrabs(_) => OuterVerifierRedeemer::UpForGrabs(()),
-    //     OuterVerifier::ThresholdMultiSignature(_) => todo!(),
-    // };
-
-    // // insert the proof
-    // let encoded_redeemer = redeemer.encode();
-    // log::debug!("encoded redeemer is: {:?}", encoded_redeemer);
-    //
-    // input.redeemer = RedemptionStrategy::Redemption(encoded_redeemer);
-    // }
 
     log::debug!("signed transactions is: {:#?}", transaction);
 
@@ -189,11 +149,10 @@ pub async fn spend_coins_helper(
         };
         let amount = output.payload;
 
-        print!(
+        println!(
             "Created {:?} worth {amount}. ",
             hex::encode(new_coin_ref.encode())
         );
-        // crate::pretty_print_verifier(&output.verifier);
     }
 
     Ok(())

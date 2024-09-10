@@ -51,11 +51,6 @@ pub(crate) fn open_db(
     expected_genesis_hash: H256,
     expected_genesis_block: OpaqueBlock,
 ) -> anyhow::Result<Db> {
-    //TODO figure out why this assertion fails.
-    // Possibly this https://substrate.stackexchange.com/questions/7357/
-    // But also possibly something else now that I switched to opaque block
-    //assert_eq!(BlakeTwo256::hash_of(&expected_genesis_block.encode()), expected_genesis_hash, "expected block hash does not match expected block");
-
     let db = sled::open(db_path)?;
 
     // Open the tables we'll need
@@ -94,16 +89,11 @@ pub(crate) fn open_db(
 }
 
 pub(crate) async fn synchronize(
-    parachain: bool,
     db: &Db,
     client: &HttpClient,
     filter: &bool,
 ) -> anyhow::Result<()> {
-    if parachain {
-        synchronize_helper(db, client, filter).await
-    } else {
-        synchronize_helper(db, client, filter).await
-    }
+    synchronize_helper(db, client, filter).await
 }
 
 /// Synchronize the local database to the database of the running node.
@@ -414,18 +404,6 @@ pub(crate) fn height(db: &Db) -> anyhow::Result<Option<u32>> {
     } else {
         Some(num_blocks as u32 - 1)
     })
-}
-
-// This is part of what I expect to be a useful public interface. For now it is not used.
-#[allow(dead_code)]
-/// Debugging use. Print out the entire block_hashes tree.
-pub(crate) fn print_block_hashes_tree(db: &Db) -> anyhow::Result<()> {
-    for height in 0..height(db)?.unwrap() {
-        let hash = get_block_hash(db, height)?;
-        println!("height: {height}, hash: {hash:?}");
-    }
-
-    Ok(())
 }
 
 /// Debugging use. Print the entire unspent outputs tree.

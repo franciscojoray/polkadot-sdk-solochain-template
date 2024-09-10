@@ -64,25 +64,15 @@ async fn main() -> anyhow::Result<()> {
         sync::height(&db)?.expect("db should be initialized automatically when opening.");
     log::info!("Number of blocks in the db: {num_blocks}");
 
-    // // The filter function that will determine whether the local database should track a given utxo
-    // // is based on whether that utxo is privately owned by a key that is in our keystore.
-    // let keystore_filter = |v: &OuterVerifier| -> bool {
-    //     matches![v,
-    //         OuterVerifier::Sr25519Signature(Sr25519Signature { owner_pubkey })
-    //             if crate::keystore::has_key(&keystore, owner_pubkey)
-    //     ]
-    // };
-    let keystore_filter = true;
-
     if !sled::Db::was_recovered(&db) {
-        sync::apply_block(&db, node_genesis_block, node_genesis_hash, &keystore_filter).await?;
+        sync::apply_block(&db, node_genesis_block, node_genesis_hash, &true).await?;
     }
 
     // Synchronize the wallet with attached node unless instructed otherwise.
     if cli.no_sync {
         log::warn!("Skipping sync with node. Using previously synced information.")
     } else {
-        sync::synchronize(false, &db, &client, &keystore_filter).await?;
+        sync::synchronize(&db, &client, &true).await?;
 
         log::info!(
             "Wallet database synchronized with node to height {:?}",
@@ -93,7 +83,7 @@ async fn main() -> anyhow::Result<()> {
     // Dispatch to proper subcommand
     match cli.command {
         Some(Command::MintCoins(args)) => {
-            money::mint_coins(false, &client, args).await
+            money::mint_coins(&client, args).await
         }
         Some(Command::VerifyCoin { output_ref }) => {
             println!("Details of coin {}:", hex::encode(output_ref.encode()));
@@ -163,10 +153,6 @@ async fn main() -> anyhow::Result<()> {
 
             Ok(())
         }
-        // Some(Command::ShowTimestamp) => {
-        //     println!("Timestamp: {}", timestamp::get_timestamp(&db)?);
-        //     Ok(())
-        // }
         None => {
             log::info!("No Wallet Command invoked. Exiting.");
             Ok(())
@@ -240,24 +226,3 @@ fn default_data_path() -> PathBuf {
         .data_dir()
         .into()
 }
-
-// /// Utility to pretty print an outer verifier
-// pub fn pretty_print_verifier(v: &OuterVerifier) {
-//     match v {
-//         OuterVerifier::Sr25519Signature(sr25519_signature) => {
-//             println! {"owned by {}", sr25519_signature.owner_pubkey}
-//         }
-//         OuterVerifier::UpForGrabs(_) => println!("that can be spent by anyone"),
-//         OuterVerifier::ThresholdMultiSignature(multi_sig) => {
-//             let string_sigs: Vec<_> = multi_sig
-//                 .signatories
-//                 .iter()
-//                 .map(|sig| format!("0x{}", hex::encode(sig)))
-//                 .collect();
-//             println!(
-//                 "Owned by {:?}, with a threshold of {} sigs necessary",
-//                 string_sigs, multi_sig.threshold
-//             );
-//         }
-//     }
-// }
