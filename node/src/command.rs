@@ -1,14 +1,11 @@
 use crate::{
-	// benchmarking::{inherent_benchmark_data, RemarkBuilder, TransferKeepAliveBuilder},
 	chain_spec,
 	cli::{Cli, Subcommand},
 	service,
 };
-// use frame_benchmarking_cli::{BenchmarkCmd, ExtrinsicFactory, SUBSTRATE_REFERENCE_HARDWARE};
 use sc_cli::SubstrateCli;
 use sc_service::PartialComponents;
-use solochain_template_runtime::{Block}; //, EXISTENTIAL_DEPOSIT};
-use sp_keyring::Sr25519Keyring;
+use solochain_template_runtime::{Block};
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
