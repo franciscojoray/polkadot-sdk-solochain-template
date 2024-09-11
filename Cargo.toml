@@ -6,7 +6,7 @@ repository = "https://github.com/paritytech/polkadot-sdk-solochain-template.git"
 edition = "2021"
 
 [workspace]
-members = ["node", "pallets/template", "runtime", "tuxedo-core", "wallet"]
+members = ["node", "runtime", "tuxedo-core", "wallet"]
 resolver = "2"
 
 [workspace.dependencies]
