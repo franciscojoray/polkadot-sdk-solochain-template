@@ -19,11 +19,11 @@ pub use sc_rpc_api::DenyUnsafe;
 /// Full client dependencies.
 pub struct FullDeps<C, P> {
 	/// The client instance to use.
-	pub client: Arc<C>,
+	pub _client: Arc<C>,
 	/// Transaction pool instance.
-	pub pool: Arc<P>,
+	pub _pool: Arc<P>,
 	/// Whether to deny unsafe calls
-	pub deny_unsafe: DenyUnsafe,
+	pub _deny_unsafe: DenyUnsafe,
 }
 
 /// Instantiate all full RPC extensions.

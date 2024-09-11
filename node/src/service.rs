@@ -208,9 +208,9 @@ pub fn new_full<
 		let client = client.clone();
 		let pool = transaction_pool.clone();
 
-		Box::new(move |deny_unsafe, _| {
+		Box::new(move |_deny_unsafe, _| {
 			let deps =
-				crate::rpc::FullDeps { client: client.clone(), pool: pool.clone(), deny_unsafe };
+				crate::rpc::FullDeps { _client: client.clone(), _pool: pool.clone(), _deny_unsafe };
 			crate::rpc::create_full(deps).map_err(Into::into)
 		})
 	};
