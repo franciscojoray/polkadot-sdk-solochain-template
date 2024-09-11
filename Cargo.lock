@@ -5762,20 +5762,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
-name = "pallet-template"
-version = "0.1.0"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "scale-info",
- "sp-core 34.0.0",
- "sp-io 38.0.0",
- "sp-runtime 39.0.0",
-]
-
-[[package]]
 name = "pallet-transaction-payment"
 version = "37.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
