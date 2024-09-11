@@ -123,7 +123,6 @@ impl From<UtxoError> for InvalidTransaction {
         match utxo_error {
             UtxoError::DuplicateInput => InvalidTransaction::Custom(255),
             UtxoError::PreExistingOutput => InvalidTransaction::Custom(254),
-            // UtxoError::VerifierError => InvalidTransaction::BadProof,
             UtxoError::MissingInput => InvalidTransaction::Future,
         }
     }
@@ -146,12 +145,3 @@ impl From<Coin> for Output {
         Self { payload }
     }
 }
-
-// impl<V, V1: Into<V>, P: Into<DynamicallyTypedData>> From<(P, V1)> for Output<V> {
-//     fn from(values: (P, V1)) -> Self {
-//         Self {
-//             payload: values.0.into(),
-//             verifier: values.1.into(),
-//         }
-//     }
-// }

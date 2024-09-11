@@ -11,8 +11,6 @@ use sp_std::vec::Vec;
 /// It is called by the `ChainSpec::build` method, via the `development_genesis_config` function.
 /// The resulting transactions must be ordered: inherent first, then extrinsics.
 pub fn development_genesis_transactions() -> Vec<Transaction> {
-    // The inherents are computed using the appropriate method, and placed before the extrinsics.
-
     Vec::new()
 }
 

@@ -6,11 +6,9 @@
 
 use crate::{
     types::{Output, OutputRef},
-    // verifier::Verifier,
     LOG_TARGET,
 };
 use parity_scale_codec::{Decode, Encode};
-// use sp_std::marker::PhantomData;
 
 pub struct TransparentUtxoSet;
 

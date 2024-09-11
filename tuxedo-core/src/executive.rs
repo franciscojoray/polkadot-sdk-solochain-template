@@ -7,13 +7,9 @@
 //! are no duplicate inputs, and that the verifiers are satisfied.
 
 use crate::{
-    // constraint_checker::ConstraintChecker,
-    // dynamic_typing::DynamicallyTypedData,
     ensure,
-    // inherents::PARENT_INHERENT_IDENTIFIER,
     types::{Block, BlockNumber, DispatchResult, Header, OutputRef, Transaction, UtxoError},
     utxo_set::TransparentUtxoSet,
-    // verifier::Verifier,
     EXTRINSIC_KEY,
     HEADER_KEY,
     HEIGHT_KEY,
@@ -21,17 +17,14 @@ use crate::{
 };
 use log::debug;
 use parity_scale_codec::{Decode, Encode};
-// use sp_core::H256;
-// use sp_inherents::{CheckInherentsResult, InherentData};
 use sp_runtime::{
     traits::{BlakeTwo256, Block as BlockT, Extrinsic, Hash as HashT, Header as HeaderT},
     transaction_validity::{
-        InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
+        TransactionLongevity, TransactionSource, TransactionValidity,
         TransactionValidityError, ValidTransaction,
     },
     ApplyExtrinsicResult, ExtrinsicInclusionMode, StateVersion,
 };
-// use sp_std::marker::PhantomData;
 use sp_std::{collections::btree_set::BTreeSet, vec::Vec};
 
 /// The executive. Each runtime is encouraged to make a type alias called `Executive` that fills
@@ -65,54 +58,13 @@ where
             );
         }
 
-        // Build the stripped transaction (with the redeemers stripped) and encode it
-        // This will be passed to the verifiers
-        // let stripped = transaction.clone();
-        // for input in stripped.inputs.iter_mut() {
-        //     input.redeemer = Default::default();
-        // }
-        // let stripped_encoded = stripped.encode();
-
-        // Check that the verifiers of all inputs are satisfied
-        // Keep a Vec of the input data for passing to the constraint checker
         // Keep track of any missing inputs for use in the tagged transaction pool
-        // let mut input_data = Vec::new();
-        // let mut evicted_input_data = Vec::new();
         let mut missing_inputs = Vec::new();
         for input in transaction.inputs.iter() {
-            if let Some(_input_utxo) = TransparentUtxoSet::peek_utxo(&input.output_ref) {
-                // match input.redeemer {
-                //     RedemptionStrategy::Redemption(ref redeemer) => {
-                //         let redeemer = V::Redeemer::decode(&mut &redeemer[..])
-                //             .map_err(|_| UtxoError::VerifierError)?;
-                //         ensure!(
-                //             input_utxo.verifier.verify(
-                //                 &stripped_encoded,
-                //                 Self::block_height(),
-                //                 &redeemer
-                //             ),
-                //             UtxoError::VerifierError
-                //         );
-                //         input_data.push(input_utxo.payload);
-                //     }
-                //     RedemptionStrategy::Eviction => evicted_input_data.push(input_utxo.payload),
-                // }
-            } else {
+            if None == TransparentUtxoSet::peek_utxo(&input.output_ref) {
                 missing_inputs.push(input.output_ref.clone().encode());
             }
         }
-
-        // // Make a Vec of the peek data for passing to the constraint checker
-        // // Keep track of any missing peeks for use in the tagged transaction pool
-        // // Use the same vec as previously to keep track of missing peeks
-        // let mut peek_data = Vec::new();
-        // for output_ref in transaction.peeks.iter() {
-        //     if let Some(peek_utxo) = TransparentUtxoSet::peek_utxo(output_ref) {
-        //         peek_data.push(peek_utxo.payload);
-        //     } else {
-        //         missing_inputs.push(output_ref.encode());
-        //     }
-        // }
 
         // Make sure no outputs already exist in storage
         let tx_hash = BlakeTwo256::hash_of(&transaction.encode());
@@ -146,7 +98,6 @@ where
             .collect::<Vec<_>>();
 
         // If any of the inputs are missing, we cannot make any more progress
-        // If they are all present, we may proceed to call the constraint checker
         if !missing_inputs.is_empty() {
             debug!(
                 target: LOG_TARGET,
@@ -160,19 +111,6 @@ where
                 propagate: true,
             });
         }
-
-        // Extract the payload data from each output
-        // let output_data: Vec<DynamicallyTypedData> = transaction
-        //     .outputs
-        //     .iter()
-        //     .map(|o| o.payload.clone())
-        //     .collect();
-
-        // // Call the constraint checker
-        // transaction
-        //     .checker
-        //     .check(&input_data, &evicted_input_data, &peek_data, &output_data)
-        //     .map_err(UtxoError::ConstraintCheckerError)?;
 
         // Return the valid transaction
         Ok(ValidTransaction {
@@ -398,92 +336,17 @@ where
             block_hash
         );
 
-        // Inherents are not permitted in the pool. They only come from the block author.
-        // We perform this check here rather than in the `validate_tuxedo_transaction` helper,
-        // because that helper is called again during on-chain execution. Inherents are valid
-        // during execution, so we do not want this check repeated.
-        let r = if false {
-            // tx.checker.is_inherent() {
-            Err(TransactionValidityError::Invalid(InvalidTransaction::Call))
-        } else {
-            Self::validate_tuxedo_transaction(&tx).map_err(|e| {
-                log::warn!(
-                    target: LOG_TARGET,
-                    "Tuxedo Transaction did not validate (in the pool): {:?}",
-                    e,
-                );
-                TransactionValidityError::Invalid(e.into())
-            })
-        };
+        let r = Self::validate_tuxedo_transaction(&tx).map_err(|e| {
+                    log::warn!(
+                        target: LOG_TARGET,
+                        "Tuxedo Transaction did not validate (in the pool): {:?}",
+                        e,
+                    );
+                    TransactionValidityError::Invalid(e.into())
+                });
 
         debug!(target: LOG_TARGET, "Validation result: {:?}", r);
 
         r
     }
-
-    // // The next two are for the standard beginning-of-block inherent extrinsics.
-    // pub fn inherent_extrinsics(data: sp_inherents::InherentData) -> Vec<Transaction> {
-    //     debug!(
-    //         target: LOG_TARGET,
-    //         "Entering `inherent_extrinsics`."
-    //     );
-    //
-    //     // Extract the complete parent block from the inherent data
-    //     let parent: Block = data
-    //         .get_data(&PARENT_INHERENT_IDENTIFIER)
-    //         .expect("Parent block inherent data should be able to decode.")
-    //         .expect("Parent block should be present among authoring inherent data.");
-    //
-    //     // Extract the inherents from the previous block, which can be found at the beginning of the extrinsics list.
-    //     // The parent is already imported, so we know it is valid and we know its inherents came first.
-    //     // We also annotate each transaction with its original hash for purposes of constructing output refs later.
-    //     // This is necessary because the transaction hash changes as we unwrap layers of aggregation,
-    //     // and we need an original universal transaction id.
-    //     let previous_blocks_inherents: Vec<(Transaction, H256)> = parent
-    //         .extrinsics()
-    //         .iter()
-    //         .cloned()
-    //         .take_while(|tx| tx.checker.is_inherent())
-    //         .map(|tx| {
-    //             let id = BlakeTwo256::hash_of(&tx.encode());
-    //             (tx, id)
-    //         })
-    //         .collect();
-    //
-    //     debug!(
-    //         target: LOG_TARGET,
-    //         "The previous block had {} extrinsics ({} inherents).", parent.extrinsics().len(), previous_blocks_inherents.len()
-    //     );
-    //
-    //     // Call into constraint checker's own inherent hooks to create the actual transactions
-    //     C::create_inherents(&data, previous_blocks_inherents)
-    // }
-    //
-    // pub fn check_inherents(
-    //     block: Block,
-    //     data: InherentData,
-    // ) -> sp_inherents::CheckInherentsResult {
-    //     debug!(
-    //         target: LOG_TARGET,
-    //         "Entering `check_inherents`"
-    //     );
-    //
-    //     let mut result = CheckInherentsResult::new();
-    //
-    //     // Tuxedo requires that all inherents come at the beginning of the block.
-    //     // (Soon we will also allow them at the end, but never throughout the body.)
-    //     // (TODO revise this logic once that is implemented.)
-    //     // At this off-chain pre-check stage, we assume that requirement is upheld.
-    //     // It will be verified later once we are executing on-chain.
-    //     let inherents: Vec<Transaction> = block
-    //         .extrinsics()
-    //         .iter()
-    //         .cloned()
-    //         .take_while(|tx| tx.checker.is_inherent())
-    //         .collect();
-    //
-    //     C::check_inherents(&data, inherents, &mut result);
-    //
-    //     result
-    // }
 }

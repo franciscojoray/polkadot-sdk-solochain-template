@@ -262,27 +262,12 @@ impl_runtime_apis! {
         }
     }
 
-    // impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
-    //     fn create_default_config() -> Vec<u8> {
-            // serde_json::to_vec(&genesis::development_genesis_transactions())
-            //     .expect("Development genesis transactions are valid.")
-    //     }
-
-    //     fn build_config(config: Vec<u8>) -> sp_genesis_builder::Result {
-    //         let genesis_transactions = serde_json::from_slice::<Vec<Transaction>>(config.as_slice())
-    //             .map_err(|_| "The input JSON is not a valid list of Transactions.")?;
-    //         TuxedoGenesisConfigBuilder::build(genesis_transactions)
-    //     }
-    // }
-
     impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
         fn build_state(_config: Vec<u8>) -> sp_genesis_builder::Result {
-            // build_state::<RuntimeGenesisConfig>(config)
             Ok(())
         }
 
         fn get_preset(_id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
-            // get_preset::<RuntimeGenesisConfig>(id, |_| None)
             let txs : &Vec<Transaction> = &genesis::development_genesis_transactions();
             Some(serde_json::to_vec(txs)
                 .expect("Development genesis transactions are valid."))
