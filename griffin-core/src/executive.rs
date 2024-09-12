@@ -36,16 +36,16 @@ where
     Block: BlockT,
     Transaction: Extrinsic,
 {
-    /// Does pool-style validation of a tuxedo transaction.
+    /// Does pool-style validation of a griffin transaction.
     /// Does not commit anything to storage.
     /// This returns Ok even if some inputs are still missing because the tagged transaction pool can handle that.
-    /// We later check that there are no missing inputs in `apply_tuxedo_transaction`
-    pub fn validate_tuxedo_transaction(
+    /// We later check that there are no missing inputs in `apply_griffin_transaction`
+    pub fn validate_griffin_transaction(
         transaction: &Transaction,
     ) -> Result<ValidTransaction, UtxoError> {
         debug!(
             target: LOG_TARGET,
-            "validating tuxedo transaction",
+            "validating griffin transaction",
         );
 
         // Make sure there are no duplicate inputs
@@ -122,18 +122,18 @@ where
         })
     }
 
-    /// Does full verification and application of tuxedo transactions.
-    /// Most of the validation happens in the call to `validate_tuxedo_transaction`.
+    /// Does full verification and application of griffin transactions.
+    /// Most of the validation happens in the call to `validate_griffin_transaction`.
     /// Once those checks are done we make sure there are no missing inputs and then update storage.
-    pub fn apply_tuxedo_transaction(transaction: Transaction) -> DispatchResult {
+    pub fn apply_griffin_transaction(transaction: Transaction) -> DispatchResult {
         debug!(
             target: LOG_TARGET,
-            "applying tuxedo transaction {:?}", transaction
+            "applying griffin transaction {:?}", transaction
         );
 
         // Re-do the pre-checks. These should have been done in the pool, but we can't
         // guarantee that foreign nodes to these checks faithfully, so we need to check on-chain.
-        let valid_transaction = Self::validate_tuxedo_transaction(&transaction)?;
+        let valid_transaction = Self::validate_griffin_transaction(&transaction)?;
 
         // If there are still missing inputs, we cannot execute this,
         // although it would be valid in the pool
@@ -172,7 +172,7 @@ where
         }
     }
 
-    /// A helper function that allows tuxedo runtimes to read the current block height
+    /// A helper function that allows griffin runtimes to read the current block height
     pub fn block_height() -> BlockNumber {
         sp_io::storage::get(HEIGHT_KEY)
             .and_then(|d| BlockNumber::decode(&mut &*d).ok())
@@ -196,7 +196,7 @@ where
         // performing pool validations and other off-chain runtime calls.
         sp_io::storage::set(HEIGHT_KEY, &header.number().encode());
 
-        // Tuxedo blocks always allow user transactions.
+        // griffin blocks always allow user transactions.
         ExtrinsicInclusionMode::AllExtrinsics
     }
 
@@ -215,10 +215,10 @@ where
         sp_io::storage::set(EXTRINSIC_KEY, &extrinsics.encode());
 
         // Now actually apply the extrinsic
-        Self::apply_tuxedo_transaction(extrinsic).map_err(|e| {
+        Self::apply_griffin_transaction(extrinsic).map_err(|e| {
             log::warn!(
                 target: LOG_TARGET,
-                "Tuxedo Transaction did not apply successfully: {:?}",
+                "Griffin Transaction did not apply successfully: {:?}",
                 e,
             );
             TransactionValidityError::Invalid(e.into())
@@ -269,7 +269,7 @@ where
         // performing pool validations and other off-chain runtime calls.
         sp_io::storage::set(HEIGHT_KEY, &block.header().number().encode());
 
-        // Tuxedo requires that inherents are at the beginning (and soon end) of the
+        // Griffin requires that inherents are at the beginning (and soon end) of the
         // block and not scattered throughout. We use this flag to enforce that.
         let mut finished_with_opening_inherents = false;
 
@@ -285,7 +285,7 @@ where
                 finished_with_opening_inherents = true;
             }
 
-            match Self::apply_tuxedo_transaction(extrinsic.clone()) {
+            match Self::apply_griffin_transaction(extrinsic.clone()) {
                 Ok(()) => debug!(
                     target: LOG_TARGET,
                     "Successfully executed extrinsic: {:?}", extrinsic
@@ -336,10 +336,10 @@ where
             block_hash
         );
 
-        let r = Self::validate_tuxedo_transaction(&tx).map_err(|e| {
+        let r = Self::validate_griffin_transaction(&tx).map_err(|e| {
                     log::warn!(
                         target: LOG_TARGET,
-                        "Tuxedo Transaction did not validate (in the pool): {:?}",
+                        "Griffin Transaction did not validate (in the pool): {:?}",
                         e,
                     );
                     TransactionValidityError::Invalid(e.into())

@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use clap::{ArgAction::Append, Args, Parser, Subcommand};
 use sp_core::H256;
-use tuxedo_core::types::{Coin, OutputRef};
+use griffin_core::types::{Coin, OutputRef};
 use crate::{
     h256_from_string,
     keystore::SHAWN_PUB_KEY,

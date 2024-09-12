@@ -108,8 +108,8 @@ pub fn run() -> sc_cli::Result<()> {
 				match config.network.network_backend {
 					sc_network::config::NetworkBackendType::Libp2p => service::new_full::<
 						sc_network::NetworkWorker<
-							tuxedo_core::types::OpaqueBlock,
-							<tuxedo_core::types::OpaqueBlock as sp_runtime::traits::Block>::Hash,
+							griffin_core::types::OpaqueBlock,
+							<griffin_core::types::OpaqueBlock as sp_runtime::traits::Block>::Hash,
 						>,
 					>(config)
 					.map_err(sc_cli::Error::Service),

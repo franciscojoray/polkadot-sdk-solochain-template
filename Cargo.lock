@@ -2945,6 +2945,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "griffin-core"
+version = "1.0.0-dev"
+dependencies = [
+ "array-bytes",
+ "async-trait",
+ "log",
+ "parity-scale-codec",
+ "parity-util-mem",
+ "sc-chain-spec 27.0.0",
+ "sc-client-api 37.0.0",
+ "sc-executor 0.40.0",
+ "scale-info",
+ "serde",
+ "sp-blockchain 37.0.1",
+ "sp-core 34.0.0",
+ "sp-debug-derive 14.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.10.1)",
+ "sp-genesis-builder 0.15.0",
+ "sp-inherents 34.0.0",
+ "sp-io 38.0.0",
+ "sp-runtime 39.0.0",
+ "sp-std 14.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.10.1)",
+ "sp-storage 21.0.0",
+]
+
+[[package]]
 name = "group"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -9156,6 +9181,7 @@ dependencies = [
  "frame-benchmarking-cli",
  "frame-system",
  "futures",
+ "griffin-core",
  "jsonrpsee",
  "pallet-transaction-payment",
  "pallet-transaction-payment-rpc",
@@ -9187,13 +9213,13 @@ dependencies = [
  "sp-timestamp",
  "substrate-build-script-utils",
  "substrate-frame-rpc-system",
- "tuxedo-core",
 ]
 
 [[package]]
 name = "solochain-template-runtime"
 version = "0.1.0"
 dependencies = [
+ "griffin-core",
  "hex-literal",
  "parity-scale-codec",
  "scale-info",
@@ -9214,7 +9240,6 @@ dependencies = [
  "sp-transaction-pool",
  "sp-version 37.0.0",
  "substrate-wasm-builder",
- "tuxedo-core",
 ]
 
 [[package]]
@@ -11567,31 +11592,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tuxedo-core"
-version = "1.0.0-dev"
-dependencies = [
- "array-bytes",
- "async-trait",
- "log",
- "parity-scale-codec",
- "parity-util-mem",
- "sc-chain-spec 27.0.0",
- "sc-client-api 37.0.0",
- "sc-executor 0.40.0",
- "scale-info",
- "serde",
- "sp-blockchain 37.0.1",
- "sp-core 34.0.0",
- "sp-debug-derive 14.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.10.1)",
- "sp-genesis-builder 0.15.0",
- "sp-inherents 34.0.0",
- "sp-io 38.0.0",
- "sp-runtime 39.0.0",
- "sp-std 14.0.0 (git+https://github.com/paritytech/polkadot-sdk?branch=release-polkadot-v1.10.1)",
- "sp-storage 21.0.0",
-]
-
-[[package]]
 name = "twox-hash"
 version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11736,6 +11736,7 @@ dependencies = [
  "directories",
  "env_logger 0.11.5",
  "futures",
+ "griffin-core",
  "hex",
  "hex-literal",
  "jsonrpsee",
@@ -11749,7 +11750,6 @@ dependencies = [
  "sp-keystore 0.40.0",
  "sp-runtime 39.0.0",
  "tokio",
- "tuxedo-core",
 ]
 
 [[package]]

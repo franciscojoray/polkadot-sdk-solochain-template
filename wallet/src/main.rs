@@ -5,7 +5,7 @@ use jsonrpsee::http_client::HttpClientBuilder;
 use parity_scale_codec::{Decode, Encode};
 use sp_core::H256;
 use std::path::PathBuf;
-use tuxedo_core::types::OutputRef;
+use griffin_core::types::OutputRef;
 
 mod cli;
 mod keystore;
@@ -206,7 +206,7 @@ fn strip_0x_prefix(s: &str) -> &str {
 fn temp_dir() -> PathBuf {
     // Since it is only used for testing purpose, we don't need a secure temp dir, just a unique one.
     std::env::temp_dir().join(format!(
-        "tuxedo-wallet-{}",
+        "griffin-wallet-{}",
         std::time::UNIX_EPOCH.elapsed().unwrap().as_millis(),
     ))
 }

@@ -22,7 +22,7 @@ use sp_runtime::{
     traits::{BlakeTwo256, Hash},
     OpaqueExtrinsic,
 };
-use tuxedo_core::{
+use griffin_core::{
     types::Transaction,
     types::{Coin, Input, OpaqueBlock, OutputRef},
 };

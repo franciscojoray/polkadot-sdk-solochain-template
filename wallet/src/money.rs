@@ -8,7 +8,7 @@ use parity_scale_codec::Encode;
 use sc_keystore::LocalKeystore;
 use sled::Db;
 use sp_runtime::traits::{BlakeTwo256, Hash};
-use tuxedo_core::{
+use griffin_core::{
     types::{Coin, Input, Output, OutputRef, Transaction},
 };
 
@@ -23,7 +23,7 @@ pub async fn mint_coins(
 pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyhow::Result<()> {
     log::debug!("The args are:: {:?}", args);
 
-    let transaction: tuxedo_core::types::Transaction = Transaction {
+    let transaction: griffin_core::types::Transaction = Transaction {
         inputs: Vec::new(),
         outputs: vec![Output {
             payload: args.amount,

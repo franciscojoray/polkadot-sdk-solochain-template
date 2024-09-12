@@ -10,7 +10,7 @@ use sp_core::{
 use sp_keystore::Keystore;
 use std::path::Path;
 
-/// A KeyTypeId to use in the keystore for Tuxedo transactions. We'll use this everywhere
+/// A KeyTypeId to use in the keystore for Griffin transactions. We'll use this everywhere
 /// until it becomes clear that there is a reason to use multiple of them
 const KEY_TYPE: KeyTypeId = KeyTypeId(*b"_gri");
 

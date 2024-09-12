@@ -10,18 +10,18 @@ use sp_std::vec::Vec;
 
 pub type Coin = u64;
 
-// All Tuxedo chains use the same BlakeTwo256 hash.
+// All Griffin chains use the same BlakeTwo256 hash.
 pub type Hash = BlakeTwo256;
 /// Opaque block hash type.
 pub type OpaqueHash = <Hash as HashT>::Output;
-/// All Tuxedo chains use the same u32 BlockNumber.
+/// All Griffin chains use the same u32 BlockNumber.
 pub type BlockNumber = u32;
-/// Because all tuxedo chains use the same Blocknumber and Hash types,
+/// Because all griffin chains use the same Blocknumber and Hash types,
 /// they also use the same concrete header type.
 pub type Header = sp_runtime::generic::Header<BlockNumber, Hash>;
-/// An alias for a Tuxedo block with all the common parts filled in.
+/// An alias for a Griffin block with all the common parts filled in.
 pub type Block = sp_runtime::generic::Block<Header, Transaction>;
-/// Opaque block type. It has a Standard Tuxedo header, and opaque transactions.
+/// Opaque block type. It has a Standard Griffin header, and opaque transactions.
 pub type OpaqueBlock = sp_runtime::generic::Block<Header, sp_runtime::OpaqueExtrinsic>;
 
 /// A reference to a output that is expected to exist in the state.
@@ -90,7 +90,7 @@ impl Extrinsic for Transaction {
     // 3. Unsigned inherents: `Some(false)`
     //
     // In Substrate generally, and also in FRAME, all three of these could exist.
-    // But in Tuxedo we will never have signed user transactions, and therefore
+    // But in Griffin we will never have signed user transactions, and therefore
     // will never return `Some(true)`.
     //
     // Perhaps a dedicated enum makes more sense as the return type?
@@ -133,7 +133,7 @@ pub type DispatchResult = Result<(), UtxoError>;
 
 /// An opaque piece of Transaction output data. This is how the data appears at the Runtime level. After
 /// the verifier is checked, strongly typed data will be extracted and passed to the constraint checker.
-/// In a cryptocurrency, the data represents a single coin. In Tuxedo, the type of
+/// In a cryptocurrency, the data represents a single coin. In Griffin, the type of
 /// the contained data is generic.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Output {

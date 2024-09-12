@@ -2,8 +2,8 @@
 description = "UTXO framework for Substrate and Polkadot."
 edition = "2021"
 license = "Apache-2.0"
-name = "tuxedo-core"
-repository = "https://github.com/Off-Narrative-Labs/Tuxedo"
+name = "griffin-core"
+repository = "https://github.com/txpipe/griffin"
 version = "1.0.0-dev"
 
 [dependencies]

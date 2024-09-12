@@ -1,7 +1,7 @@
-//! This crate is the core of the Tuxedo runtime framework.
+//! This crate is the core of the Griffin runtime framework.
 //!
-//! All Tuxedo runtimes will use this machinery and plug in their specific
-//! Tuxedo piece(s)
+//! All Griffin runtimes will use this machinery and plug in their specific
+//! Griffin piece(s)
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
@@ -12,8 +12,8 @@ pub mod types;
 pub mod utxo_set;
 pub use executive::Executive;
 
-/// A Tuxedo-specific target for diagnostic node log messages
-const LOG_TARGET: &str = "tuxedo-core";
+/// A Griffin-specific target for diagnostic node log messages
+const LOG_TARGET: &str = "griffin-core";
 
 /// A transient storage key that will hold the partial header while a block is being built.
 /// This key is cleared before the end of the block.

@@ -24,10 +24,6 @@ use sp_std::prelude::*;
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
-use tuxedo_core::{
-    types::Transaction as TuxedoTransaction,
-};
-
 /// Opaque types. These are used by the CLI to instantiate machinery that don't need to know
 /// the specifics of the runtime. They can then be made to be agnostic over specific formats
 /// of data like extrinsics, allowing for them to continue syncing the network through upgrades
@@ -60,8 +56,8 @@ pub mod opaque {
 /// This runtime version.
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-    spec_name: create_runtime_str!("tuxedo-template-runtime"),
-    impl_name: create_runtime_str!("tuxedo-template-runtime"),
+    spec_name: create_runtime_str!("solochain-template-runtime"),
+    impl_name: create_runtime_str!("solochain-template-runtime"),
     authoring_version: 1,
     spec_version: 1,
     impl_version: 1,
@@ -79,10 +75,10 @@ pub fn native_version() -> NativeVersion {
     }
 }
 
-pub type Transaction = TuxedoTransaction;
-pub type Block = tuxedo_core::types::Block;
-pub type Executive = tuxedo_core::Executive;
-pub type Output = tuxedo_core::types::Output;
+pub type Transaction = griffin_core::types::Transaction;
+pub type Block = griffin_core::types::Block;
+pub type Executive = griffin_core::Executive;
+pub type Output = griffin_core::types::Output;
 
 /// The Aura slot duration. When things are working well, this will also be the block time.
 const BLOCK_TIME: u64 = 3000;

@@ -8,11 +8,11 @@ version = "0.1.0"
 
 [dependencies]
 runtime = { package = "solochain-template-runtime", path = "../runtime" }
-tuxedo-core = { path = "../tuxedo-core" }
+griffin-core = { path = "../griffin-core" }
 
-clap = { features = [ "derive" ], workspace = true }
+clap = { features = ["derive"], workspace = true }
 hex-literal = { workspace = true }
-jsonrpsee = { features = [ "http-client" ], workspace = true }
+jsonrpsee = { features = ["http-client"], workspace = true }
 log = { workspace = true }
 parity-scale-codec = { workspace = true }
 serde_json = { workspace = true }

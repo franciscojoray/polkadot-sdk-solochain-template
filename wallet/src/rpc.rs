@@ -5,7 +5,7 @@ use anyhow::anyhow;
 use jsonrpsee::{core::client::ClientT, http_client::HttpClient, rpc_params};
 use parity_scale_codec::{Decode, Encode};
 use sp_core::H256;
-use tuxedo_core::{
+use griffin_core::{
     types::{OpaqueBlock, Output, OutputRef},
 
 };
