@@ -138,10 +138,11 @@ pub type DispatchResult = Result<(), UtxoError>;
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Output {
     pub payload: Coin,
+    pub owner: H256,
 }
 
-impl From<Coin> for Output {
-    fn from(payload: Coin) -> Self {
-        Self { payload }
+impl From<(Coin, H256)> for Output {
+    fn from(p_o: (Coin, H256)) -> Self {
+        Self { payload: p_o.0, owner:p_o.1 }
     }
 }

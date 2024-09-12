@@ -7,7 +7,6 @@ use jsonrpsee::{core::client::ClientT, http_client::HttpClient, rpc_params};
 use parity_scale_codec::Encode;
 use sc_keystore::LocalKeystore;
 use sled::Db;
-use sp_core::H256;
 use sp_runtime::traits::{BlakeTwo256, Hash};
 use tuxedo_core::{
     types::{Coin, Input, Output, OutputRef, Transaction},
@@ -28,6 +27,7 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
         inputs: Vec::new(),
         outputs: vec![Output {
             payload: args.amount,
+            owner: args.owner,
         }],
     };
 
@@ -83,6 +83,7 @@ pub async fn spend_coins_helper(
     for amount in &args.output_amount {
         let output = Output {
             payload: *amount,
+            owner: args.recipient,
         };
         total_output_amount += *amount;
         transaction.outputs.push(output);
@@ -172,6 +173,6 @@ pub(crate) fn apply_transaction(
 ) -> anyhow::Result<()> {
     let amount = output.payload;
     let output_ref = OutputRef { tx_hash, index };
-    let owner_pubkey = H256::from_slice(b"                                ");
+    let owner_pubkey = output.owner;
     crate::sync::add_unspent_output(db, &output_ref, &owner_pubkey, &amount)
 }
