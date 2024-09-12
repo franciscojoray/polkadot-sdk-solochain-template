@@ -7,10 +7,10 @@ use sp_core::H256;
 use griffin_core::types::{Coin, OutputRef};
 use crate::{
     h256_from_string,
-    keystore::SHAWN_PUB_KEY,
     output_ref_from_string,
     DEFAULT_ENDPOINT
 };
+use runtime::genesis::SHAWN_PUB_KEY;
 
 /// The default number of coins to be minted.
 pub const DEFAULT_MINT_VALUE: &str = "100";
@@ -104,6 +104,10 @@ pub enum Command {
 
 #[derive(Debug, Args)]
 pub struct MintCoinArgs {
+    // /// An input to be consumed by this transaction. This argument may be specified multiple times.
+    // #[arg(long, short, verbatim_doc_comment, value_parser = output_ref_from_string)]
+    // pub input: Vec<OutputRef>,
+
     /// Pass the amount to be minted.
     #[arg(long, short, verbatim_doc_comment, action = Append,default_value = DEFAULT_MINT_VALUE)]
     pub amount: Coin,
@@ -116,7 +120,6 @@ pub struct MintCoinArgs {
 #[derive(Debug, Args)]
 pub struct SpendArgs {
     /// An input to be consumed by this transaction. This argument may be specified multiple times.
-    /// They must all be coins.
     #[arg(long, short, verbatim_doc_comment, value_parser = output_ref_from_string)]
     pub input: Vec<OutputRef>,
 

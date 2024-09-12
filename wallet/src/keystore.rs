@@ -9,18 +9,11 @@ use sp_core::{
 };
 use sp_keystore::Keystore;
 use std::path::Path;
+use runtime::genesis::SHAWN_PHRASE;
 
 /// A KeyTypeId to use in the keystore for Griffin transactions. We'll use this everywhere
 /// until it becomes clear that there is a reason to use multiple of them
 const KEY_TYPE: KeyTypeId = KeyTypeId(*b"_gri");
-
-/// A default seed phrase for signing inputs when none is provided
-/// Corresponds to the default pubkey.
-pub const SHAWN_PHRASE: &str =
-    "news slush supreme milk chapter athlete soap sausage put clutch what kitten";
-
-/// The public key corresponding to the default seed above.
-pub const SHAWN_PUB_KEY: &str = "d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67";
 
 /// Insert the example "Shawn" key into the keystore for the current session only.
 pub fn insert_development_key_for_this_session(keystore: &LocalKeystore) -> anyhow::Result<()> {
