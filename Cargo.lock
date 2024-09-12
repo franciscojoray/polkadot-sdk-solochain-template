@@ -9233,6 +9233,7 @@ dependencies = [
  "sp-core 34.0.0",
  "sp-genesis-builder 0.15.0",
  "sp-inherents 34.0.0",
+ "sp-io 38.0.0",
  "sp-runtime 39.0.0",
  "sp-session",
  "sp-std 14.0.0 (registry+https://github.com/rust-lang/crates.io-index)",

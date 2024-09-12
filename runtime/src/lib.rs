@@ -259,14 +259,17 @@ impl_runtime_apis! {
     }
 
     impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
-        fn build_state(_config: Vec<u8>) -> sp_genesis_builder::Result {
-            Ok(())
+        fn build_state(config: Vec<u8>) -> sp_genesis_builder::Result {
+            let genesis_transactions = serde_json::from_slice::<Vec<Transaction>>(config.as_slice())
+                .map_err(|_| "The input JSON is not a valid list of Transactions.")?;
+
+            genesis::build(genesis_transactions)
         }
 
         fn get_preset(_id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
             let txs : &Vec<Transaction> = &genesis::development_genesis_transactions();
             Some(serde_json::to_vec(txs)
-                .expect("Development genesis transactions are valid."))
+                 .expect("Development genesis transactions are valid."))
         }
 
         fn preset_names() -> Vec<sp_genesis_builder::PresetId> {
