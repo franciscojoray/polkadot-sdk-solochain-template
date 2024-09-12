@@ -36,6 +36,7 @@ sp-std = { version = "14", default-features = false }
 griffin-core = { default-features = false, path = "../griffin-core" }
 sp-application-crypto = { default-features = false, workspace = true }
 hex-literal = { workspace = true }
+log = { workspace = true }
 
 
 [build-dependencies]

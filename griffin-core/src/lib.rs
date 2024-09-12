@@ -21,7 +21,7 @@ const HEADER_KEY: &[u8] = b"header";
 
 /// A storage key that will store the block height during and after execution.
 /// This allows the block number to be available in the runtime even during off-chain api calls.
-const HEIGHT_KEY: &[u8] = b"height";
+pub const HEIGHT_KEY: &[u8] = b"height";
 
 /// A transient storage key that will hold the list of extrinsics that have been applied so far.
 /// This key is cleared before the end of the block.

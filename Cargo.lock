@@ -9221,6 +9221,7 @@ version = "0.1.0"
 dependencies = [
  "griffin-core",
  "hex-literal",
+ "log",
  "parity-scale-codec",
  "scale-info",
  "serde",
