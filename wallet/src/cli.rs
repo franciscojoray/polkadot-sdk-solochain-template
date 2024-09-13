@@ -104,9 +104,9 @@ pub enum Command {
 
 #[derive(Debug, Args)]
 pub struct MintCoinArgs {
-    // /// An input to be consumed by this transaction. This argument may be specified multiple times.
-    // #[arg(long, short, verbatim_doc_comment, value_parser = output_ref_from_string)]
-    // pub input: Vec<OutputRef>,
+    /// An input to be consumed by this transaction. This argument may be specified multiple times.
+    #[arg(long, short, verbatim_doc_comment, value_parser = output_ref_from_string)]
+    pub input: Vec<OutputRef>,
 
     /// Pass the amount to be minted.
     #[arg(long, short, verbatim_doc_comment, action = Append,default_value = DEFAULT_MINT_VALUE)]

@@ -23,7 +23,7 @@ pub async fn mint_coins(
 pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyhow::Result<()> {
     log::debug!("The args are:: {:?}", args);
 
-    let transaction: griffin_core::types::Transaction = Transaction {
+    let mut transaction: griffin_core::types::Transaction = Transaction {
         inputs: Vec::new(),
         outputs: vec![Output {
             payload: args.amount,
@@ -31,6 +31,21 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
         }],
     };
 
+    if args.input.is_empty() {
+        Err(anyhow!(
+            "At least one input must be specified"
+        ))?
+    }
+    
+    // Each input appears as a new output.
+    for output_ref in &args.input {
+        let utxo = fetch_storage(output_ref, client).await?;
+        transaction.inputs.push(Input {
+            output_ref: output_ref.clone(),
+        });
+        transaction.outputs.push(utxo);
+    }
+    
     let encoded_tx = hex::encode(transaction.encode());
     let params = rpc_params![encoded_tx];
     let spawn_response: Result<String, _> = client.request("author_submitExtrinsic", params).await;
