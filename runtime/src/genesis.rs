@@ -6,11 +6,10 @@ use super::{
     Transaction,
     Output
 };
-use log::debug;
 use griffin_core::{ensure, EXTRINSIC_KEY, HEIGHT_KEY};
 use sp_core::{H256, Encode};
 use sp_std::{ vec::Vec, vec };
-use hex_literal::hex;
+use hex::FromHex;
 use sp_runtime::traits::Hash;
 
 type OutputRef = griffin_core::types::OutputRef;
@@ -31,7 +30,10 @@ pub fn development_genesis_transactions() -> Vec<Transaction> {
         Transaction {
             inputs: vec![],
             outputs: vec![
-                Output {payload: 100, owner: H256::from(hex!("d2bf4b844dfefd6772a8843e669f943408966a977e3ae2af1dd78e0f55f4df67"))}
+                Output {
+                    payload: 314,
+                    owner: H256::from(<[u8; 32]>::from_hex(SHAWN_PUB_KEY).unwrap())
+                }
             ]
         }
     ]

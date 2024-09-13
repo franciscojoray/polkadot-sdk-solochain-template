@@ -9220,6 +9220,7 @@ name = "solochain-template-runtime"
 version = "0.1.0"
 dependencies = [
  "griffin-core",
+ "hex",
  "hex-literal",
  "log",
  "parity-scale-codec",
