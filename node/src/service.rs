@@ -6,10 +6,29 @@ use sc_consensus_grandpa::SharedVoterState;
 use sc_service::{error::Error as ServiceError, Configuration, TaskManager, WarpSyncParams};
 use sc_telemetry::{Telemetry, TelemetryWorker};
 use sc_transaction_pool_api::OffchainTransactionPoolFactory;
-use solochain_template_runtime::{self, RuntimeApi, genesis::GriffinGenesisBlockBuilder};
-use griffin_core::types::OpaqueBlock as Block;
+use solochain_template_runtime::{self, RuntimeApi};
+use griffin_core::{genesis::GriffinGenesisBlockBuilder, types::OpaqueBlock as Block};
 use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
+// pub use sc_executor::NativeElseWasmExecutor;
+
+// pub struct ExecutorDispatch;
+
+// impl sc_executor::NativeExecutionDispatch for ExecutorDispatch {
+//     type ExtendHostFunctions = ();
+
+//     fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
+//         node_template_runtime::api::dispatch(method, data)
+//     }
+
+//     fn native_version() -> sc_executor::NativeVersion {
+//         node_template_runtime::native_version()
+//     }
+// }
+
+// pub(crate) type FullClient =
+//     sc_service::TFullClient<Block, RuntimeApi, NativeElseWasmExecutor<ExecutorDispatch>>;
+
 
 pub(crate) type FullClient = sc_service::TFullClient<
 	Block,
@@ -49,6 +68,7 @@ pub fn new_partial(config: &Configuration) -> Result<Service, ServiceError> {
 		.transpose()?;
 
 	let executor = sc_service::new_wasm_executor::<sp_io::SubstrateHostFunctions>(config);
+	// let executor = sc_service::new_native_or_wasm_executor(config);
 
 	let backend = sc_service::new_db_backend(config.db_config())?;
     let genesis_block_builder = GriffinGenesisBlockBuilder::new(
