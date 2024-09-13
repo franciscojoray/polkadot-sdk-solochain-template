@@ -6,7 +6,7 @@ use sc_consensus_grandpa::SharedVoterState;
 use sc_service::{error::Error as ServiceError, Configuration, TaskManager, WarpSyncParams};
 use sc_telemetry::{Telemetry, TelemetryWorker};
 use sc_transaction_pool_api::OffchainTransactionPoolFactory;
-use solochain_template_runtime::{self, RuntimeApi};
+use solochain_template_runtime::{self, RuntimeApi, genesis::GriffinGenesisBlockBuilder};
 use griffin_core::types::OpaqueBlock as Block;
 use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
@@ -49,13 +49,25 @@ pub fn new_partial(config: &Configuration) -> Result<Service, ServiceError> {
 		.transpose()?;
 
 	let executor = sc_service::new_wasm_executor::<sp_io::SubstrateHostFunctions>(config);
-	let (client, backend, keystore_container, task_manager) =
-		sc_service::new_full_parts::<Block, RuntimeApi, _>(
-			config,
-			telemetry.as_ref().map(|(_, telemetry)| telemetry.handle()),
-			executor,
-		)?;
-	let client = Arc::new(client);
+
+	let backend = sc_service::new_db_backend(config.db_config())?;
+    let genesis_block_builder = GriffinGenesisBlockBuilder::new(
+        config.chain_spec.as_storage_builder(),
+        !config.no_genesis(),
+        backend.clone(),
+        executor.clone(),
+    )?;
+
+    let (client, backend, keystore_container, task_manager) =
+        sc_service::new_full_parts_with_genesis_builder::<Block, RuntimeApi, _, _>(
+            config,
+            telemetry.as_ref().map(|(_, telemetry)| telemetry.handle()),
+            executor,
+            backend,
+            genesis_block_builder,
+            false,
+        )?;
+    let client = Arc::new(client);
 
 	let telemetry = telemetry.map(|(worker, telemetry)| {
 		task_manager.spawn_handle().spawn("telemetry", None, worker.run());
