@@ -30,21 +30,13 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
             owner: args.owner,
         }],
     };
-
-    if args.input.is_empty() {
-        Err(anyhow!(
-            "At least one input must be specified"
-        ))?
-    }
-    
-    // Each input appears as a new output.
-    for output_ref in &args.input {
-        let utxo = fetch_storage(output_ref, client).await?;
-        transaction.inputs.push(Input {
-            output_ref: output_ref.clone(),
-        });
-        transaction.outputs.push(utxo);
-    }
+  
+    // The input appears as a new output.
+    let utxo = fetch_storage(&args.input, client).await?;
+    transaction.inputs.push(Input {
+        output_ref: args.input.clone(),
+    });
+    transaction.outputs.push(utxo);
     
     let encoded_tx = hex::encode(transaction.encode());
     let params = rpc_params![encoded_tx];
