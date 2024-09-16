@@ -1,4 +1,4 @@
-//! Custom GenesisBlockBuilder for Tuxedo, to allow extrinsics to be added to the genesis block.
+//! Custom GenesisBlockBuilder, to allow extrinsics to be added to the genesis block.
 
 use parity_scale_codec::{Decode, Encode};
 use sc_chain_spec::BuildGenesisBlock;

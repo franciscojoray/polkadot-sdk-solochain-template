@@ -10,25 +10,6 @@ use griffin_solochain_runtime::{self, RuntimeApi};
 use griffin_core::{genesis::GriffinGenesisBlockBuilder, types::OpaqueBlock as Block};
 use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
-// pub use sc_executor::NativeElseWasmExecutor;
-
-// pub struct ExecutorDispatch;
-
-// impl sc_executor::NativeExecutionDispatch for ExecutorDispatch {
-//     type ExtendHostFunctions = ();
-
-//     fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-//         node_template_runtime::api::dispatch(method, data)
-//     }
-
-//     fn native_version() -> sc_executor::NativeVersion {
-//         node_template_runtime::native_version()
-//     }
-// }
-
-// pub(crate) type FullClient =
-//     sc_service::TFullClient<Block, RuntimeApi, NativeElseWasmExecutor<ExecutorDispatch>>;
-
 
 pub(crate) type FullClient = sc_service::TFullClient<
 	Block,
