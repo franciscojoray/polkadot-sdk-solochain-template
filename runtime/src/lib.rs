@@ -263,7 +263,7 @@ impl_runtime_apis! {
             let genesis_transactions = serde_json::from_slice::<Vec<Transaction>>(config.as_slice())
                 .map_err(|_| "The input JSON is not a valid list of Transactions.")?;
 
-            genesis::build(genesis_transactions)
+            griffin_core::genesis::GriffinGenesisConfigBuilder::build(genesis_transactions)
         }
 
         fn get_preset(_id: &Option<sp_genesis_builder::PresetId>) -> Option<Vec<u8>> {
