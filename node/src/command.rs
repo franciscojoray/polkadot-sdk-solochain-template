@@ -5,11 +5,11 @@ use crate::{
 };
 use sc_cli::SubstrateCli;
 use sc_service::PartialComponents;
-use solochain_template_runtime::{Block};
+use griffin_solochain_runtime::{Block};
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
-		"Substrate Node".into()
+		"Griffin solochain node based on Substrate / Polkadot SDK".into()
 	}
 
 	fn impl_version() -> String {
@@ -25,11 +25,11 @@ impl SubstrateCli for Cli {
 	}
 
 	fn support_url() -> String {
-		"support.anonymous.an".into()
+		env!("CARGO_PKG_HOMEPAGE").into()
 	}
 
 	fn copyright_start_year() -> i32 {
-		2017
+		2024
 	}
 
 	fn load_spec(&self, id: &str) -> Result<Box<dyn sc_service::ChainSpec>, String> {

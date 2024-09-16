@@ -1,6 +1,6 @@
 use sc_service::ChainType;
-use solochain_template_runtime::{WASM_BINARY};
-use solochain_template_runtime::genesis::development_genesis_config;
+use griffin_solochain_runtime::{WASM_BINARY};
+use griffin_solochain_runtime::genesis::development_genesis_config;
 
 /// Specialized `ChainSpec`. This is a specialization of the general Substrate ChainSpec type.
 pub type ChainSpec = sc_service::GenericChainSpec;

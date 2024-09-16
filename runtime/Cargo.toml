@@ -1,8 +1,8 @@
 [package]
-name = "solochain-template-runtime"
-description = "A solochain runtime template built with Substrate, part of Polkadot Sdk. (polkadot v1.15.0)"
+name = "griffin-solochain-runtime"
+description = "A solochain runtime built with Substrate, part of Polkadot SDK"
 version = "0.1.0"
-license = "Unlicense"
+license.workspace = true
 authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
@@ -32,12 +32,11 @@ serde = { version = "1.0.209", default-features = false }
 serde_json = { features = [
 	"alloc",
 ], default-features = false, workspace = true }
-sp-std = { version = "14", default-features = false }
+sp-std = { default-features = false, workspace = true }
 griffin-core = { default-features = false, path = "../griffin-core" }
 sp-application-crypto = { default-features = false, workspace = true }
 hex-literal = { workspace = true }
 log = { workspace = true }
-
 hex = { version = "0.4.3", default-features = false }
 
 [build-dependencies]
@@ -61,6 +60,5 @@ std = [
 	"sp-storage/std",
 	"sp-transaction-pool/std",
 	"sp-version/std",
-
 	"substrate-wasm-builder",
 ]

@@ -1,8 +1,13 @@
 [workspace.package]
-license = "MIT-0"
-authors = ["Parity Technologies <admin@parity.io>"]
-homepage = "https://paritytech.github.io/polkadot-sdk/"
-repository = "https://github.com/paritytech/polkadot-sdk-solochain-template.git"
+license = "Apache-2.0"
+authors = [
+	"Santiago Carmuega <santiago@carmuega.me>",
+	"Francisco Joray <francisco.joray@txpipe.io>",
+	"Franco Luque <franco@txpipe.io>",
+	"Pedro Sánchez Terraf <pedrost@gmail.com>"
+]
+homepage = "https://github.com/txpipe/griffin"
+repository = "https://github.com/txpipe/griffin"
 edition = "2021"
 
 [workspace]
@@ -10,8 +15,7 @@ members = ["node", "runtime", "griffin-core", "wallet"]
 resolver = "2"
 
 [workspace.dependencies]
-solochain-template-runtime = { path = "./runtime", default-features = false }
-pallet-template = { path = "./pallets/template", default-features = false }
+griffin-solochain-runtime = { path = "./runtime", default-features = false }
 clap = { version = "4.5.3" }
 frame-benchmarking-cli = { version = "42.0.0", default-features = false }
 frame-system = { version = "37.0.0", default-features = false }
@@ -67,20 +71,10 @@ sp-transaction-pool = { version = "34.0.0", default-features = false }
 sp-version = { version = "37.0.0", default-features = false }
 substrate-wasm-builder = { version = "24.0.0", default-features = false }
 
-
-async-trait = "0.1.73"
+hex-literal = "0.4.1"
 log = "0.4"
 parity-scale-codec = { version = "3.6", default-features = false }
-parity-util-mem = "0.12.0"
-sc-chain-spec = { version = "37.0.0" }
 serde = { version = "1.0.209", default-features = false }
-sp-debug-derive = { branch = "release-polkadot-v1.10.1", default-features = false, git = "https://github.com/paritytech/polkadot-sdk" }
-sp-std = { branch = "release-polkadot-v1.10.1", default-features = false, git = "https://github.com/paritytech/polkadot-sdk" }
-# Core-only dependencies
-array-bytes = "6.0.0"
-# Procedural macro dependencies
-proc-macro2 = "1.0.67"
-quote = "1.0.23"
-syn = "2.0.15"
-sp-application-crypto = { version = "38", default-features = false }
-hex-literal = "0.4.1"
+sp-application-crypto = { version = "38.0.0", default-features = false }
+sp-debug-derive = { version = "14.0.0", default-features = false }
+sp-std = { version = "14.0.0", default-features = false }
