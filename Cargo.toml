@@ -1,8 +1,13 @@
 [workspace.package]
-license = "MIT-0"
-authors = ["Parity Technologies <admin@parity.io>"]
-homepage = "https://paritytech.github.io/polkadot-sdk/"
-repository = "https://github.com/paritytech/polkadot-sdk-solochain-template.git"
+license = "Apache-2.0"
+authors = [
+	"Santiago Carmuega <santiago@carmuega.me>",
+	"Francisco Joray <francisco.joray@txpipe.io>",
+	"Franco Luque <franco@txpipe.io>",
+	"Pedro Sánchez Terraf <pedrost@gmail.com>"
+]
+homepage = "https://github.com/txpipe/griffin"
+repository = "https://github.com/txpipe/griffin"
 edition = "2021"
 
 [workspace]
