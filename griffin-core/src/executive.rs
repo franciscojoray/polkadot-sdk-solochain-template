@@ -269,22 +269,8 @@ where
         // performing pool validations and other off-chain runtime calls.
         sp_io::storage::set(HEIGHT_KEY, &block.header().number().encode());
 
-        // Griffin requires that inherents are at the beginning (and soon end) of the
-        // block and not scattered throughout. We use this flag to enforce that.
-        let mut finished_with_opening_inherents = false;
-
         // Apply each extrinsic
         for extrinsic in block.extrinsics() {
-            // Enforce that inherents are in the right place
-            let current_tx_is_inherent = false; // extrinsic.checker.is_inherent();
-            if current_tx_is_inherent && finished_with_opening_inherents {
-                panic!("Tried to execute opening inherent after switching to non-inherents.");
-            }
-            if !current_tx_is_inherent && !finished_with_opening_inherents {
-                // This is the first non-inherent, so we update our flag and continue.
-                finished_with_opening_inherents = true;
-            }
-
             match Self::apply_griffin_transaction(extrinsic.clone()) {
                 Ok(()) => debug!(
                     target: LOG_TARGET,

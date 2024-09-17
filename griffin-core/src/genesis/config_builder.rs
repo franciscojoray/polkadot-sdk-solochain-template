@@ -3,7 +3,7 @@
 use crate::{
     ensure,
     types::{OutputRef, Transaction},
-    EXTRINSIC_KEY, HEIGHT_KEY,
+    EXTRINSIC_KEY,
 };
 use parity_scale_codec::Encode;
 use sp_runtime::traits::Hash as HashT;
@@ -20,10 +20,6 @@ where
     pub fn build(genesis_transactions: Vec<Transaction>) -> sp_genesis_builder::Result {
         // The transactions are stored under a special key.
         sp_io::storage::set(EXTRINSIC_KEY, &genesis_transactions.encode());
-
-        //TODO This was added in during merge conflicts. Make sure inherents are working even in real parachains.
-        // Initialize the stored block number to 0
-        sp_io::storage::set(HEIGHT_KEY, &0u32.encode());
 
         for tx in genesis_transactions.into_iter() {
             // Enforce that transactions do not have any inputs.
