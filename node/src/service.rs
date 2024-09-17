@@ -1,6 +1,6 @@
 //! Service and ServiceFactory implementation. Specialized wrapper over substrate service.
 
-use sc_client_api::{BlockBackend};
+use sc_client_api::BlockBackend;
 use sc_consensus_aura::{ImportQueueParams, SlotProportion, StartAuraParams};
 use sc_consensus_grandpa::SharedVoterState;
 use sc_service::{error::Error as ServiceError, Configuration, TaskManager, WarpSyncParams};
@@ -49,7 +49,6 @@ pub fn new_partial(config: &Configuration) -> Result<Service, ServiceError> {
 		.transpose()?;
 
 	let executor = sc_service::new_wasm_executor::<sp_io::SubstrateHostFunctions>(config);
-	// let executor = sc_service::new_native_or_wasm_executor(config);
 
 	let backend = sc_service::new_db_backend(config.db_config())?;
     let genesis_block_builder = GriffinGenesisBlockBuilder::new(

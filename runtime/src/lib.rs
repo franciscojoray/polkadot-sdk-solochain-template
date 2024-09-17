@@ -56,10 +56,10 @@ pub mod opaque {
 /// This runtime version.
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-    spec_name: create_runtime_str!("solochain-template-runtime"),
-    impl_name: create_runtime_str!("solochain-template-runtime"),
+    spec_name: create_runtime_str!("griffin-solochain-runtime"),
+    impl_name: create_runtime_str!("griffin-solochain-runtime"),
     authoring_version: 1,
-    spec_version: 1,
+    spec_version: 100,
     impl_version: 1,
     apis: RUNTIME_API_VERSIONS,
     transaction_version: 1,
