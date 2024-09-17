@@ -3,8 +3,7 @@
 //! The executive is the main orchestrator for the entire runtime.
 //! It has functions that implement the Core, BlockBuilder, and TxPool runtime APIs.
 //!
-//! It does all the reusable verification of UTXO transactions such as checking that there
-//! are no duplicate inputs, and that the verifiers are satisfied.
+//! It does all the reusable verification of UTXO transactions.
 
 use crate::{
     ensure,
@@ -49,7 +48,6 @@ where
         );
 
         // Make sure there are no duplicate inputs
-        // Duplicate peeks are allowed, although they are inefficient and wallets should not create such transactions
         {
             let input_set: BTreeSet<_> = transaction.inputs.iter().map(|o| o.encode()).collect();
             ensure!(
@@ -132,7 +130,7 @@ where
         );
 
         // Re-do the pre-checks. These should have been done in the pool, but we can't
-        // guarantee that foreign nodes to these checks faithfully, so we need to check on-chain.
+        // guarantee that foreign nodes do these checks faithfully, so we need to check on-chain.
         let valid_transaction = Self::validate_griffin_transaction(&transaction)?;
 
         // If there are still missing inputs, we cannot execute this,

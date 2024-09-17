@@ -24,7 +24,7 @@ pub type Block = sp_runtime::generic::Block<Header, Transaction>;
 /// Opaque block type. It has a Standard Griffin header, and opaque transactions.
 pub type OpaqueBlock = sp_runtime::generic::Block<Header, sp_runtime::OpaqueExtrinsic>;
 
-/// A reference to a output that is expected to exist in the state.
+/// A reference to an output that is expected to exist in the state.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct OutputRef {
     /// A hash of the transaction that created this output
@@ -100,7 +100,7 @@ impl Extrinsic for Transaction {
     }
 }
 
-/// A reference the a utxo that will be consumed along with proof that it may be consumed
+/// A reference to a utxo that will be consumed.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Input {
     /// a reference to the output being consumed
@@ -131,10 +131,7 @@ impl From<UtxoError> for InvalidTransaction {
 /// The Result of dispatching a UTXO transaction.
 pub type DispatchResult = Result<(), UtxoError>;
 
-/// An opaque piece of Transaction output data. This is how the data appears at the Runtime level. After
-/// the verifier is checked, strongly typed data will be extracted and passed to the constraint checker.
-/// In a cryptocurrency, the data represents a single coin. In Griffin, the type of
-/// the contained data is generic.
+/// An opaque piece of Transaction output data. This is how the data appears at the Runtime level.
 #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]
 pub struct Output {
     pub payload: Coin,

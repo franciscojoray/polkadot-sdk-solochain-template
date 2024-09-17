@@ -50,7 +50,7 @@ impl<'a, Block: BlockT, B: Backend<Block>, E: RuntimeVersionOf + CodeExecutor>
 
     /// Build the genesis block, including the extrinsics found in storage at EXTRINSIC_KEY.
     /// The extrinsics are not checked for validity, nor executed, so the values in storage must be placed manually.
-    /// This can be done by using the `assimilate_storage` function.
+    /// This can be done by using the `build_genesis_storage.assimilate_storage` function.
     fn build_genesis_block(self) -> sp_blockchain::Result<(Block, Self::BlockImportOperation)> {
         // We build it here to gain mutable access to the storage.
         let mut genesis_storage = self
