@@ -11,13 +11,15 @@ use sp_keystore::Keystore;
 use std::path::Path;
 use runtime::genesis::SHAWN_PHRASE;
 
-/// A KeyTypeId to use in the keystore for Griffin transactions. We'll use this everywhere
-/// until it becomes clear that there is a reason to use multiple of them
+/// A KeyTypeId to use in the keystore for Griffin transactions.
 const KEY_TYPE: KeyTypeId = KeyTypeId(*b"_gri");
 
 /// Insert the example "Shawn" key into the keystore for the current session only.
-pub fn insert_development_key_for_this_session(keystore: &LocalKeystore) -> anyhow::Result<()> {
+pub fn insert_development_key_for_this_session(
+    keystore: &LocalKeystore
+) -> anyhow::Result<()> {
     keystore.sr25519_generate_new(KEY_TYPE, Some(SHAWN_PHRASE))?;
+
     Ok(())
 }
 
@@ -29,22 +31,29 @@ pub fn insert_key(keystore: &LocalKeystore, seed: &str) -> anyhow::Result<()> {
     keystore
         .insert(KEY_TYPE, seed, public_key.as_ref())
         .map_err(|()| anyhow!("Error inserting key"))?;
+
     Ok(())
 }
 
 /// Generate a new key from system entropy and insert it into the keystore, optionally
 /// protected by a password.
-pub fn generate_key(keystore: &LocalKeystore, password: Option<String>) -> anyhow::Result<()> {
+pub fn generate_key(
+    keystore: &LocalKeystore,
+    password: Option<String>
+) -> anyhow::Result<()> {
     let (pair, phrase, _) = Pair::generate_with_phrase(password.as_deref());
     println!("Generated public key is {:?}", pair.public());
     println!("Generated Phrase is {}", phrase);
     keystore
         .insert(KEY_TYPE, phrase.as_ref(), pair.public().as_ref())
         .map_err(|()| anyhow!("Error inserting key"))?;
+
     Ok(())
 }
 
-pub fn get_keys(keystore: &LocalKeystore) -> anyhow::Result<impl Iterator<Item = Vec<u8>>> {
+pub fn get_keys(
+    keystore: &LocalKeystore
+) -> anyhow::Result<impl Iterator<Item = Vec<u8>>> {
     Ok(keystore.keys(KEY_TYPE)?.into_iter())
 }
 

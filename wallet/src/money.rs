@@ -17,10 +17,6 @@ pub async fn mint_coins(
     client: &HttpClient,
     args: MintCoinArgs,
 ) -> anyhow::Result<()> {
-    mint_coins_helper(client, args).await
-}
-
-pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyhow::Result<()> {
     log::debug!("The args are:: {:?}", args);
 
     let mut transaction: griffin_core::types::Transaction = Transaction {
@@ -65,15 +61,6 @@ pub async fn mint_coins_helper(client: &HttpClient, args: MintCoinArgs) -> anyho
 pub async fn spend_coins(
     db: &Db,
     client: &HttpClient,
-    keystore: &LocalKeystore,
-    args: SpendArgs,
-) -> anyhow::Result<()> {
-    spend_coins_helper(db, client, keystore, args).await
-}
-
-pub async fn spend_coins_helper(
-    db: &Db,
-    client: &HttpClient,
     _keystore: &LocalKeystore,
     args: SpendArgs,
 ) -> anyhow::Result<()> {
@@ -85,7 +72,7 @@ pub async fn spend_coins_helper(
         outputs: Vec::new(),
     };
 
-    // Construct each output and then push to the transactions
+    // Construct each output and then push to the transaction
     let mut total_output_amount: u64 = 0;
     for amount in &args.output_amount {
         let output = Output {
@@ -99,8 +86,7 @@ pub async fn spend_coins_helper(
     // The total input set will consist of any manually chosen inputs
     // plus any automatically chosen to make the input amount high enough
     let mut total_input_amount: u64 = 0;
-    let mut all_input_refs = args.input;
-    for output_ref in &all_input_refs {
+    for output_ref in &args.input {
         let (_owner_pubkey, amount) = sync::get_unspent(db, output_ref)?.ok_or(anyhow!(
             "user-specified output ref not found in local database"
         ))?;
@@ -110,19 +96,12 @@ pub async fn spend_coins_helper(
     // If the supplied inputs are not valuable enough to cover the output amount
     // we select the rest arbitrarily from the local db. (In many cases, this will be all the inputs.)
     if total_input_amount < total_output_amount {
-        match sync::get_arbitrary_unspent_set(db, total_output_amount - total_input_amount)? {
-            Some(more_inputs) => {
-                all_input_refs.extend(more_inputs);
-            }
-            None => Err(anyhow!(
-                "Not enough value in database to construct transaction"
-            ))?,
-        }
+        Err(anyhow!("Inputs not enough for given outputs."))?;
     }
 
     // Make sure each input decodes and is still present in the node's storage,
     // and then push to transaction.
-    for output_ref in &all_input_refs {
+    for output_ref in &args.input {
         get_coin_from_storage(output_ref, client).await?;
         transaction.inputs.push(Input {
             output_ref: output_ref.clone(),

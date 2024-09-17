@@ -1,4 +1,4 @@
-//! A simple CLI wallet. For now it is a toy just to start testing things out.
+//! CLI wallet to demostrate minting and spending transactions.
 
 use clap::Parser;
 use jsonrpsee::http_client::HttpClientBuilder;

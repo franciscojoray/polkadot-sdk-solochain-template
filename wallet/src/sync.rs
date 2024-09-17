@@ -1,9 +1,9 @@
 //! This module is responsible for maintaining the wallet's local database of blocks
-//! and owned UTXOs to the canonical database reported by the node.
+//! and owned UTxOs to the canonical database reported by the node.
 //!
 //! It is backed by a sled database
 //!
-//! ## Schema
+//! ## Scheme
 //!
 //! There are 4 tables in the database
 //! BlockHashes     block_number:u32 => block_hash:H256
@@ -176,37 +176,6 @@ pub(crate) fn get_unspent(db: &Db, output_ref: &OutputRef) -> anyhow::Result<Opt
     };
 
     Ok(Some(<(H256, Coin)>::decode(&mut &ivec[..])?))
-}
-
-/// Picks an arbitrary set of unspent outputs from the database for spending.
-/// The set's token values must add up to at least the specified target value.
-///
-/// The return value is None if the total value of the database is less than the target
-/// It is Some(Vec![...]) when it is possible
-pub(crate) fn get_arbitrary_unspent_set(
-    db: &Db,
-    target: Coin,
-) -> anyhow::Result<Option<Vec<OutputRef>>> {
-    let wallet_unspent_tree = db.open_tree(UNSPENT)?;
-
-    let mut total: Coin = 0;
-    let mut keepers = Vec::new();
-
-    let mut unspent_iter = wallet_unspent_tree.iter();
-    while total < target {
-        let Some(pair) = unspent_iter.next() else {
-            return Ok(None);
-        };
-
-        let (output_ref_ivec, owner_amount_ivec) = pair?;
-        let output_ref = OutputRef::decode(&mut &output_ref_ivec[..])?;
-        let (_owner_pubkey, amount) = <(H256, Coin)>::decode(&mut &owner_amount_ivec[..])?;
-
-        total += amount;
-        keepers.push(output_ref);
-    }
-
-    Ok(Some(keepers))
 }
 
 /// Gets the block hash from the local database given a block height. Similar the Node's RPC.
