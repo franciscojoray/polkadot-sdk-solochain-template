@@ -49,7 +49,12 @@ pub(crate) fn open_db(
     expected_genesis_hash: H256,
     expected_genesis_block: OpaqueBlock,
 ) -> anyhow::Result<Db> {
-    let db = sled::open(db_path)?;
+    // Error messages
+    const DIFF_GEN: &str = "Node reports a different genesis block than wallet.";
+    const ABORTING: &str = "Aborting all operations.";
+    const HINT: &str = "HINT: Try removing the wallet database at";
+
+    let db = sled::open(db_path.clone())?;
 
     // Open the tables we'll need
     let wallet_block_hashes_tree = db.open_tree(BLOCK_HASHES)?;
@@ -65,7 +70,14 @@ pub(crate) fn open_db(
         log::debug!("Found existing database.");
         if expected_genesis_hash != wallet_genesis_hash {
             log::error!("Wallet's genesis does not match expected. Aborting database opening.");
-            return Err(anyhow!("Node reports a different genesis block than wallet. Wallet: {wallet_genesis_hash:?}. Expected: {expected_genesis_hash:?}. Aborting all operations"));
+            return Err(anyhow!(
+                "{DIFF_GEN}\nWallet: {:?}. Expected: {:?}.\n{}\n{} {:?}.",
+                wallet_genesis_hash,
+                expected_genesis_hash,
+                ABORTING,
+                HINT,
+                db_path,
+            ));
         }
         return Ok(db);
     }
